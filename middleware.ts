@@ -65,7 +65,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protected routes - require authentication
-  const protectedPaths = ['/dashboard', '/tasks', '/meetings', '/notulensi', '/analytics', '/attendance'];
+  const protectedPaths = ['/dashboard', '/tasks', '/meetings', '/notulensi', '/analytics', '/attendance', '/settings'];
   const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path));
 
   // Auth routes - redirect to dashboard if already logged in

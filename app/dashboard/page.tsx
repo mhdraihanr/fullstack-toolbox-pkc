@@ -10,40 +10,9 @@ import {
   TrendingUp,
   Loader2,
 } from "lucide-react";
-import {
-  StatsCard,
-  TaskList,
-  NotificationPanel,
-  ChartCard,
-} from "@/components/features";
+import { StatsCard, TaskList, ChartCard } from "@/components/features";
 import { useTasks } from "@/lib/hooks/useTasks";
-// Temporary mock data for meetings until meetings API is implemented
-const mockUpcomingMeetings = [
-  {
-    id: "1",
-    title: "Rapat Evaluasi Produksi Mingguan",
-    date_time: "2024-12-23T09:00:00Z",
-    duration: 90,
-    location: "Ruang Rapat Utama",
-    participants: [{ id: "1" }, { id: "2" }, { id: "3" }],
-  },
-  {
-    id: "2",
-    title: "Meeting Quality Control",
-    date_time: "2024-12-24T14:00:00Z",
-    duration: 60,
-    location: "Lab QC",
-    participants: [{ id: "2" }, { id: "4" }],
-  },
-  {
-    id: "3",
-    title: "Koordinasi IT & Maintenance",
-    date_time: "2024-12-25T10:30:00Z",
-    duration: 45,
-    location: "Virtual Meeting",
-    participants: [{ id: "1" }, { id: "5" }],
-  },
-];
+import { useMeetings } from "@/lib/hooks/useMeetings";
 import {
   meetingAttendanceData,
   generateTaskStatusData,
@@ -61,6 +30,17 @@ export default function DashboardPage() {
   } = useTasks({
     limit: 50, // Get more tasks for better stats calculation
     autoRefresh: true,
+  });
+
+  // Get meetings data from Supabase
+  const {
+    meetings,
+    loading: meetingsLoading,
+    error: meetingsError,
+  } = useMeetings({
+    limit: 10,
+    autoRefresh: true,
+    clientSideSearch: true,
   });
 
   // Calculate real-time stats from tasks
@@ -91,7 +71,7 @@ export default function DashboardPage() {
       pendingTasks,
       inProgressTasks,
       overdueTasks,
-      upcomingMeetings: 3, // This would come from meetings API
+      upcomingMeetings: meetings.length,
       averageAttendance: 85, // This would come from meetings API
     };
   }, [tasks]);
@@ -103,7 +83,17 @@ export default function DashboardPage() {
     [tasks]
   );
 
-  const upcomingMeetings = mockUpcomingMeetings.slice(0, 3);
+  // Get upcoming meetings (next 3 meetings)
+  const upcomingMeetings = useMemo(() => {
+    const now = new Date();
+    return meetings
+      .filter((meeting) => new Date(meeting.date_time) >= now)
+      .sort(
+        (a, b) =>
+          new Date(a.date_time).getTime() - new Date(b.date_time).getTime()
+      )
+      .slice(0, 3);
+  }, [meetings]);
 
   // Show loading state
   if (tasksLoading) {
@@ -255,63 +245,74 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Right Column - Notifications and Quick Info */}
+        {/* Right Column - Upcoming Meetings and Quick Info */}
         <div className="space-y-4 sm:space-y-6">
-          {/* Notifications */}
-          <NotificationPanel
-            title="Notifications"
-            limit={4}
-            showHeader={true}
-            className="overflow-hidden"
-          />
-
           {/* Upcoming Meetings */}
           <div className="space-y-3 sm:space-y-4">
             <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
               Upcoming Meetings
             </h3>
-            <div className="space-y-2 sm:space-y-3">
-              {upcomingMeetings.map((meeting) => (
-                <div
-                  key={meeting.id}
-                  className="p-3 sm:p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-4">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm sm:text-base truncate">
-                        {meeting.title}
-                      </h4>
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                        {new Date(meeting.date_time).toLocaleDateString(
-                          "id-ID",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
-                      </p>
-                      <div className="flex items-center space-x-2 sm:space-x-3 mt-1.5 sm:mt-2">
-                        <div className="flex items-center space-x-1 sm:space-x-1.5 text-xs sm:text-sm text-muted-foreground">
-                          <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span>{meeting.duration} min</span>
-                        </div>
-                        <div className="flex items-center space-x-1 sm:space-x-1.5 text-xs sm:text-sm text-muted-foreground">
-                          <Users className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span>
-                            {meeting.participants?.length || 0} peserta
-                          </span>
+            {meetingsLoading ? (
+              <div className="flex items-center justify-center p-8">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-sm text-muted-foreground">
+                    Loading meetings...
+                  </span>
+                </div>
+              </div>
+            ) : meetingsError ? (
+              <div className="p-4 text-center text-red-600 text-sm">
+                Error loading meetings: {meetingsError}
+              </div>
+            ) : upcomingMeetings.length === 0 ? (
+              <div className="p-4 text-center text-muted-foreground text-sm">
+                No upcoming meetings
+              </div>
+            ) : (
+              <div className="space-y-2 sm:space-y-3">
+                {upcomingMeetings.map((meeting) => (
+                  <div
+                    key={meeting.id}
+                    className="p-2 sm:p-3 lg:p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex flex-col gap-2">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-xs sm:text-sm lg:text-base leading-tight break-words">
+                          {meeting.title}
+                        </h4>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {new Date(meeting.date_time).toLocaleDateString(
+                            "id-ID",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1.5">
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <Clock className="w-3 h-3 flex-shrink-0" />
+                            <span>{meeting.duration} min</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <Users className="w-3 h-3 flex-shrink-0" />
+                            <span>
+                              {meeting.participants?.length || 0} peserta
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="text-xs sm:text-sm text-muted-foreground flex-shrink-0">
-                      {meeting.location}
+                      <div className="text-xs text-muted-foreground break-words leading-tight">
+                        📍 {meeting.location}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Quick Actions */}
@@ -336,12 +337,6 @@ export default function DashboardPage() {
                 <div className="flex items-center space-x-2 sm:space-x-3">
                   <FileText className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                   <span className="truncate">Create Notulensi</span>
-                </div>
-              </button>
-              <button className="w-full text-left p-2 sm:p-3 rounded hover:bg-muted transition-colors text-sm sm:text-base">
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                  <span className="truncate">See Analytics</span>
                 </div>
               </button>
             </div>

@@ -57,7 +57,7 @@ export function Toast({
   return (
     <div
       className={cn(
-        "fixed top-4 right-4 z-50 flex items-center gap-3 p-4 rounded-lg border shadow-lg transition-all duration-300 min-w-[300px]",
+        "flex items-center gap-3 p-3 sm:p-4 rounded-lg border shadow-lg transition-all duration-300 w-[280px] sm:w-[320px] md:min-w-[300px]",
         getBackgroundColor(),
         isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       )}
@@ -105,17 +105,22 @@ export function useToast() {
   };
 
   const ToastContainer = () => (
-    <>
-      {toasts.map((toast) => (
-        <Toast
+    <div className="fixed top-20 right-4 z-50 space-y-2 pointer-events-none">
+      {toasts.map((toast, index) => (
+        <div
           key={toast.id}
-          message={toast.message}
-          type={toast.type}
-          duration={toast.duration}
-          onClose={() => removeToast(toast.id)}
-        />
+          className="pointer-events-auto"
+          style={{ transform: `translateY(${index * 10}px)` }}
+        >
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            duration={toast.duration}
+            onClose={() => removeToast(toast.id)}
+          />
+        </div>
       ))}
-    </>
+    </div>
   );
 
   return {

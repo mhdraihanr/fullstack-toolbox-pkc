@@ -21,6 +21,7 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -145,13 +146,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [supabase.auth]);
 
+  const refreshProfile = useCallback(async () => {
+    if (user) {
+      const userProfile = await fetchUserProfile(user.id);
+      setProfile(userProfile);
+    }
+  }, [user, fetchUserProfile]);
+
   const value = useMemo(() => ({
     user,
     session,
     profile,
     loading,
     signOut,
-  }), [user, session, profile, loading, signOut]);
+    refreshProfile,
+  }), [user, session, profile, loading, signOut, refreshProfile]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

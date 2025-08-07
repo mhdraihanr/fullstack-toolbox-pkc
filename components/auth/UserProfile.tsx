@@ -4,6 +4,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { User, Settings, ChevronDown } from "lucide-react";
 import { LogoutMenuItem } from "./LogoutButton";
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 
 interface UserProfileProps {
   variant?: "full" | "compact" | "avatar-only";
@@ -104,10 +105,10 @@ export function UserProfile({
         </p>
       </div>
 
-      <button className="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+      <Link href="/settings" className="flex w-full items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
         <Settings className="mr-3 h-4 w-4 flex-shrink-0" />
         <span className="truncate">Pengaturan</span>
-      </button>
+      </Link>
 
       <div className="border-t border-gray-100 dark:border-gray-700">
         <LogoutMenuItem />

@@ -83,8 +83,8 @@ export default function LoginPage() {
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
                 Toolbox
               </h1>
-              <h2 className="text-base sm:text-lg font-semibold text-green-600">
-                PT. Pupuk Kujang
+              <h2 className="text-base sm:text-2xl font-bold text-green-600">
+                PT. PUPUK KUJANG
               </h2>
             </div>
 
@@ -107,7 +107,10 @@ export default function LoginPage() {
           <form className="space-y-4" onSubmit={handleLogin}>
             <div className="space-y-3">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Email
                 </label>
                 <input
@@ -123,7 +126,10 @@ export default function LoginPage() {
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Password
                 </label>
                 <input

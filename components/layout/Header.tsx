@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { UserProfile } from "@/components/auth/UserProfile";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { mockNotifications } from "@/lib/mockData";
+import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -17,7 +17,6 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
   const { user } = useAuth();
-  const unreadNotifications = mockNotifications.filter((n) => !n.read).length;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 dark:bg-[#1E1E2D] backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -70,21 +69,7 @@ export function Header({ onMenuClick }: HeaderProps) {
         {/* Right side actions - Always positioned at the right */}
         <div className="flex items-center space-x-0.5 sm:space-x-1 lg:space-x-2 flex-shrink-0 ml-auto">
           {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative h-7 w-7 sm:h-8 sm:w-8 lg:h-10 lg:w-10"
-          >
-            <Bell className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
-            {unreadNotifications > 0 && (
-              <Badge
-                variant="destructive"
-                className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 rounded-full p-0 text-[10px] sm:text-xs flex items-center justify-center min-w-0"
-              >
-                {unreadNotifications > 9 ? "9+" : unreadNotifications}
-              </Badge>
-            )}
-          </Button>
+          <NotificationDropdown />
           {/* Theme Toggle */}
           <div className="flex-shrink-0">
             <ThemeToggle />
