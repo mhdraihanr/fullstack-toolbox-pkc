@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Web Toolbox PKC
 
-## Getting Started
+> A comprehensive web application for managing tasks, meetings, and documentation for PT Pupuk Kujang Cikampek
 
-First, run the development server:
+## ✨ Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **📋 Task Management** - Create, manage, and track tasks with automatic notifications
+- **🤝 Meeting Management** - Schedule meetings with reminders and agenda
+- **📝 Meeting Minutes (Notulensi)** - Generate and export meeting minutes to PDF
+- **📊 Real-time Dashboard** - Live tracking and analytics visualization
+- **🔐 Multi-Role Support** - Admin, Manager, and Employee permissions
+- **🌙 Dark/Light Theme** - Modern UI with theme switching
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15.4.4 + React 19.1.0 + TypeScript
+- **Styling**: Tailwind CSS v4
+- **UI Components**: Shadcn UI + Custom Components
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Icons**: Heroicons + Lucide React
+- **PDF Generator**: Puppeteer
+- **Development**: Turbopack
+
+## 📁 Project Structure
+
+```
+web-toolbox-pkc/
+├── app/                 # Next.js App Router
+│   ├── api/            # API routes
+│   ├── dashboard/      # Dashboard pages
+│   ├── meetings/       # Meeting management
+│   ├── notulensi/      # Meeting minutes
+│   └── tasks/          # Task management
+├── components/         # Reusable UI components
+├── lib/               # Utilities & hooks
+├── migrations/        # Database setup
+└── types/             # TypeScript definitions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Node.js 18+
+- pnpm
+- Supabase account
 
-## Learn More
+### Installation
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Clone repository
+git clone <repository-url>
+cd web-toolbox-pkc
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Install dependencies
+pnpm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Setup environment variables
+# Copy .env.local and update with your Supabase credentials
+# Follow: ./migrations/SUPABASE_SETUP.md
 
-## Deploy on Vercel
+# Run development server
+pnpm dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Available Scripts
+
+```bash
+pnpm dev    # Start development server
+pnpm build  # Build for production
+pnpm start  # Start production server
+pnpm lint   # Run ESLint
+```
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+**Made with ❤️ for PT Pupuk Kujang Cikampek Toolbox**
