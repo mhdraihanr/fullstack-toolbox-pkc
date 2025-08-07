@@ -4,12 +4,14 @@
 
 ## ✨ Key Features
 
+- **📱 Mobile-Friendly UI** – Fully responsive design optimized for mobile and tablet use
 - **📋 Task Management** - Create, manage, and track tasks with automatic notifications
 - **🤝 Meeting Management** - Schedule meetings with reminders and agenda
 - **📝 Meeting Minutes (Notulensi)** - Generate and export meeting minutes to PDF
 - **📊 Real-time Dashboard** - Live tracking and analytics visualization
 - **🔐 Multi-Role Support** - Admin, Manager, and Employee permissions
 - **🌙 Dark/Light Theme** - Modern UI with theme switching
+  
 
 ## 🛠️ Tech Stack
 
