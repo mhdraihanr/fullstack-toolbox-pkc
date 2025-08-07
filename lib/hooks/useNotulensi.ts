@@ -283,31 +283,32 @@ export function useNotulensi(options: UseNotulensiOptions = {}): UseNotulensiRet
         throw new Error(result.error || 'Failed to export PDF');
       }
 
-      // Get the PDF blob
-      const blob = await response.blob();
+      // Get the HTML content
+      const htmlContent = await response.text();
       
-      // Create download link
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Get filename from response headers or use default
-      const contentDisposition = response.headers.get('Content-Disposition');
-      let filename = 'notulensi.pdf';
-      if (contentDisposition) {
-        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
-        if (filenameMatch) {
-          filename = filenameMatch[1];
-        }
+      // Create a new window/tab with the HTML content
+      const newWindow = window.open('', '_blank');
+      if (newWindow) {
+        newWindow.document.write(htmlContent);
+        newWindow.document.close();
+        
+        // Focus on the new window
+        newWindow.focus();
+        
+        return true;
+      } else {
+        // Fallback: create a blob URL and open it
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        
+        // Clean up the URL after a delay
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 1000);
+        
+        return true;
       }
-      
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      
-      return true;
     } catch (err) {
       console.error('Error exporting PDF:', err);
       setError(err instanceof Error ? err.message : 'Failed to export PDF');

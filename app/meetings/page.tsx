@@ -13,6 +13,7 @@ import {
   ArrowUpDown,
   AlertTriangle,
   X,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../components/ui/Button";
@@ -32,6 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../../components/ui/Popover";
+import { useMeetings } from "../../lib/hooks/useMeetings";
 
 export default function MeetingsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,60 +64,52 @@ export default function MeetingsPage() {
     direction: "asc",
   });
 
-  const [meetings, setMeetings] = useState<Meeting[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Use the useMeetings hook
+  const {
+    meetings: allMeetings,
+    loading,
+    error,
+    updateMeetingStatus,
+    refetch
+  } = useMeetings({
+    limit: 1000,
+    clientSideSearch: true,
+    search: searchQuery,
+    status: filters.status?.join(','),
+    meeting_type: filters.meeting_type?.join(','),
+    created_by: filters.created_by
+  });
 
-  useEffect(() => {
-    const fetchMeetings = async () => {
-      setLoading(true);
-      try {
-        const result = await getMeetingsWithUsers({ limit: 100 });
-        setMeetings(result.data);
-      } catch (error) {
-        console.error("Error fetching meetings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Handle status update
+  const handleStatusUpdate = async (meetingId: string, newStatus: Meeting['status']) => {
+    try {
+      await updateMeetingStatus(meetingId, newStatus);
+      // The hook will automatically update the local state
+    } catch (error) {
+      console.error('Error updating meeting status:', error);
+      // You could add a toast notification here
+      alert('Gagal mengupdate status meeting. Silakan coba lagi.');
+    }
+  };
 
-    fetchMeetings();
-  }, []);
+  // Function to get status label in Indonesian
+  const getStatusLabel = (status: Meeting['status']) => {
+    switch (status) {
+      case 'scheduled':
+        return 'Terjadwal';
+      case 'in-progress':
+        return 'Berlangsung';
+      case 'completed':
+        return 'Selesai';
+      case 'cancelled':
+        return 'Dibatalkan';
+      default:
+        return status;
+    }
+  };
 
-  const allMeetings = meetings;
-
-  const filteredMeetings = useMemo(() => {
-    return allMeetings.filter((meeting) => {
-      if (
-        searchQuery &&
-        !meeting.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !meeting.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      ) {
-        return false;
-      }
-
-      if (
-        filters.status &&
-        filters.status.length > 0 &&
-        !filters.status.includes(meeting.status)
-      ) {
-        return false;
-      }
-
-      if (
-        filters.meeting_type &&
-        filters.meeting_type.length > 0 &&
-        !filters.meeting_type.includes(meeting.meeting_type)
-      ) {
-        return false;
-      }
-
-      if (filters.created_by && meeting.created_by !== filters.created_by) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [allMeetings, searchQuery, filters]);
+  // The filtering is now handled by the useMeetings hook
+  const filteredMeetings = allMeetings;
 
   const sortedMeetings = useMemo(() => {
     return [...filteredMeetings].sort((a, b) => {
@@ -351,11 +345,37 @@ export default function MeetingsPage() {
                 {/* Desktop Layout */}
                 <div className="hidden lg:grid grid-cols-12 gap-3 p-3 hover:bg-muted/50 items-center">
                   <div className="col-span-2">
-                    <Badge
-                      className={`${getStatusColor(meeting.status)} text-xs`}
-                    >
-                      {meeting.status}
-                    </Badge>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <button className="flex items-center gap-1 hover:opacity-80 transition-opacity">
+                          <Badge
+                             className={`${getStatusColor(meeting.status)} text-xs cursor-pointer`}
+                           >
+                             {getStatusLabel(meeting.status)}
+                           </Badge>
+                          <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                        </button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-40 p-1">
+                        <div className="space-y-1">
+                          {statusOptions.map((status) => (
+                            <button
+                              key={status}
+                              onClick={() => handleStatusUpdate(meeting.id, status)}
+                              className={`w-full text-left px-2 py-1.5 text-sm rounded-md hover:bg-muted transition-colors ${
+                                meeting.status === status ? 'bg-muted font-medium' : ''
+                              }`}
+                            >
+                              <Badge
+                                  className={`${getStatusColor(status)} text-xs`}
+                                >
+                                  {getStatusLabel(status)}
+                                </Badge>
+                            </button>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </div>
 
                   <div className="mr-5 col-span-3 min-w-0">
@@ -420,13 +440,39 @@ export default function MeetingsPage() {
                           {meeting.description}
                         </p>
                       </div>
-                      <Badge
-                        className={`${getStatusColor(
-                          meeting.status
-                        )} text-xs flex-shrink-0`}
-                      >
-                        {meeting.status}
-                      </Badge>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button className="flex items-center gap-1 hover:opacity-80 transition-opacity">
+                            <Badge
+                               className={`${getStatusColor(
+                                 meeting.status
+                               )} text-xs flex-shrink-0 cursor-pointer`}
+                             >
+                               {getStatusLabel(meeting.status)}
+                             </Badge>
+                            <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-40 p-1">
+                          <div className="space-y-1">
+                            {statusOptions.map((status) => (
+                              <button
+                                key={status}
+                                onClick={() => handleStatusUpdate(meeting.id, status)}
+                                className={`w-full text-left px-2 py-1.5 text-sm rounded-md hover:bg-muted transition-colors ${
+                                  meeting.status === status ? 'bg-muted font-medium' : ''
+                                }`}
+                              >
+                                <Badge
+                                    className={`${getStatusColor(status)} text-xs`}
+                                  >
+                                    {getStatusLabel(status)}
+                                  </Badge>
+                              </button>
+                            ))}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">

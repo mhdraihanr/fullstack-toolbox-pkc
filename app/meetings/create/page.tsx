@@ -31,7 +31,7 @@ export default function CreateMeetingPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       // Create meeting data
       const meetingData = {
@@ -42,15 +42,15 @@ export default function CreateMeetingPage() {
         location: formData.location,
         meeting_link: formData.meeting_link,
         meeting_type: formData.meeting_type,
-        agenda: formData.agenda.filter(item => item.trim() !== ''),
-        status: 'scheduled' as const,
-        created_by: '1', // Default to admin user for now
+        agenda: formData.agenda.filter((item) => item.trim() !== ""),
+        status: "scheduled" as const,
+        created_by: "1", // Default to admin user for now
       };
-      
+
       // Add meeting with participants
       const newMeeting = await addMeeting(meetingData, formData.participants);
       console.log("Meeting created:", newMeeting);
-      
+
       if (newMeeting) {
         // Redirect to meetings page
         router.push("/meetings");
@@ -81,7 +81,8 @@ export default function CreateMeetingPage() {
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (user.department && user.department.toLowerCase().includes(searchTerm.toLowerCase()))
+      (user.department &&
+        user.department.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const selectedUsers = users.filter((user) =>
@@ -221,44 +222,6 @@ export default function CreateMeetingPage() {
           />
 
           <div>
-            <label className="block text-sm font-medium mb-2">Agenda</label>
-            <div className="space-y-2">
-              {formData.agenda.map((item, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    type="text"
-                    placeholder={`Poin agenda ${index + 1}`}
-                    value={item}
-                    onChange={(e) => updateAgendaItem(index, e.target.value)}
-                    className="flex-1"
-                  />
-                  {formData.agenda.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeAgendaItem(index)}
-                      className="text-red-600"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="whiteLine"
-                size="sm"
-                onClick={addAgendaItem}
-                className="flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Tambah Agenda
-              </Button>
-            </div>
-          </div>
-
-          <div>
             <label className="block text-sm font-medium mb-2">Peserta</label>
 
             {/* Selected Participants */}
@@ -274,7 +237,7 @@ export default function CreateMeetingPage() {
                       className="flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm"
                     >
                       <Avatar
-                        className="w-5 h-5"
+                        className="w-1 h-1"
                         src={user.avatar_url || ""}
                         alt={user.name}
                         name={user.name}
@@ -284,7 +247,7 @@ export default function CreateMeetingPage() {
                       <Button
                         type="button"
                         onClick={() => removeParticipant(user.id)}
-                        className="hover:bg-primary/20 rounded-full p-0.5"
+                        className="hover:bg-primary/20 rounded-full p-0.5 w-6 h-6"
                       >
                         <X className="w-3 h-3" />
                       </Button>
@@ -355,6 +318,44 @@ export default function CreateMeetingPage() {
                 onClick={() => setIsDropdownOpen(false)}
               />
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Agenda</label>
+            <div className="space-y-2">
+              {formData.agenda.map((item, index) => (
+                <div key={index} className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder={`Poin agenda ${index + 1}`}
+                    value={item}
+                    onChange={(e) => updateAgendaItem(index, e.target.value)}
+                    className="flex-1"
+                  />
+                  {formData.agenda.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="whiteLine"
+                      size="sm"
+                      onClick={() => removeAgendaItem(index)}
+                      className="text-red-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="whiteLine"
+                size="sm"
+                onClick={addAgendaItem}
+                className="flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Tambah Agenda
+              </Button>
+            </div>
           </div>
 
           <div className="flex gap-4">

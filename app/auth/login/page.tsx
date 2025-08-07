@@ -83,7 +83,7 @@ export default function LoginPage() {
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
                 Toolbox
               </h1>
-              <h2 className="text-base sm:text-2xl font-bold text-green-600">
+              <h2 className="text-base sm:text-2xl font-semibold text-green-600">
                 PT. PUPUK KUJANG
               </h2>
             </div>
