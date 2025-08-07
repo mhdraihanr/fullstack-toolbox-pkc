@@ -21,7 +21,7 @@
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth
 - **Icons**: Heroicons + Lucide React
-- **PDF Generator**: Puppeteer
+- **PDF Generator**: jsPdf, HTML2Canvas
 - **Development**: Turbopack
 
 ## 📁 Project Structure
