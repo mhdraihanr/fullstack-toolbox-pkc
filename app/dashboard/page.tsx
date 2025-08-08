@@ -208,7 +208,7 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground px-3 py-1.5 rounded-lg bg-muted/50 border">
+                <span className="text-sm text-muted-foreground px-3 py-1.5 rounded-lg bg-white border dark:bg-gray-900 ">
                   {tasks.length} tasks
                 </span>
               </div>
@@ -269,7 +269,7 @@ export default function DashboardPage() {
                   Your scheduled meetings
                 </p>
               </div>
-              <span className="text-sm text-muted-foreground px-3 py-1.5 rounded-lg bg-muted/50 border">
+              <span className="text-sm text-muted-foreground px-3 py-1.5 rounded-lg bg-white border dark:bg-gray-900">
                 {meetings.length} meetings
               </span>
             </div>

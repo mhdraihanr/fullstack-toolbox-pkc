@@ -27,10 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/Card";
-import {
-  getMeetingsWithUsers,
-  getUsers,
-} from "../../meetings/data";
+import { getMeetingsWithUsers, getUsers } from "../../meetings/data";
 import { Meeting, MeetingAttendance, User } from "../../../types";
 import { formatRelativeTime } from "../../../lib/utils";
 
@@ -162,7 +159,7 @@ export default function AttendanceHistoryPage() {
       setQRCodes(generateQRCodes(meetingsData));
       setLastUpdated(new Date());
     } catch (error) {
-      console.error('Error refreshing data:', error);
+      console.error("Error refreshing data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -271,8 +268,6 @@ export default function AttendanceHistoryPage() {
     );
   }
 
-
-
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -322,14 +317,20 @@ export default function AttendanceHistoryPage() {
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="text-3xl font-bold text-gray-900 dark:text-white">{stats.totalAttendees}</div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">peserta hadir</p>
+            <div className="text-3xl font-bold text-gray-900 dark:text-white">
+              {stats.totalAttendees}
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              peserta hadir
+            </p>
           </CardContent>
         </Card>
 
         <Card className="hover:shadow-lg transition-shadow duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">Tepat Waktu</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Tepat Waktu
+            </CardTitle>
             <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
               <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
             </div>
@@ -351,7 +352,9 @@ export default function AttendanceHistoryPage() {
 
         <Card className="hover:shadow-lg transition-shadow duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">Terlambat</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Terlambat
+            </CardTitle>
             <div className="p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
               <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
             </div>
@@ -371,7 +374,9 @@ export default function AttendanceHistoryPage() {
 
         <Card className="hover:shadow-lg transition-shadow duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">QR Code Scans</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              QR Code Scans
+            </CardTitle>
             <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <QrCode className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
@@ -391,7 +396,9 @@ export default function AttendanceHistoryPage() {
 
         <Card className="hover:shadow-lg transition-shadow duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">QR Aktif</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              QR Aktif
+            </CardTitle>
             <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
               <Smartphone className="h-5 w-5 text-purple-600 dark:text-purple-400" />
             </div>
@@ -400,7 +407,9 @@ export default function AttendanceHistoryPage() {
             <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
               {stats.activeQRCodes}
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">kode tersedia</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              kode tersedia
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -439,7 +448,10 @@ export default function AttendanceHistoryPage() {
                       <Clock className="w-4 h-4" />
                       Expires: {new Date(qr.expiresAt).toLocaleTimeString()}
                     </div>
-                    <Badge variant="outline" className="text-xs bg-gray-50 dark:bg-gray-700">
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-gray-50 dark:bg-gray-700"
+                    >
                       {qr.scansCount} scans
                     </Badge>
                   </div>
@@ -478,7 +490,7 @@ export default function AttendanceHistoryPage() {
                 onChange={(e) => setSelectedMeeting(e.target.value || null)}
                 className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               >
-                <option value="">Semua Meeting</option>
+                <option value="">Pilih Meeting</option>
                 {meetings.map((meeting) => (
                   <option key={meeting.id} value={meeting.id}>
                     {meeting.title}
@@ -500,7 +512,7 @@ export default function AttendanceHistoryPage() {
                 }
                 className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               >
-                <option value="all">Semua Status</option>
+                <option value="all">Pilih Status</option>
                 <option value="present">Tepat Waktu</option>
                 <option value="late">Terlambat</option>
               </select>
@@ -530,8 +542,13 @@ export default function AttendanceHistoryPage() {
                 <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
                   <UserCheck className="w-6 h-6 text-gray-400 dark:text-gray-600" />
                 </div>
-                <p className="text-base font-medium mb-1">Tidak ada data kehadiran</p>
-                <p className="text-sm">Tidak ada data kehadiran yang sesuai dengan filter yang dipilih</p>
+                <p className="text-base font-medium mb-1">
+                  Tidak ada data kehadiran
+                </p>
+                <p className="text-sm">
+                  Tidak ada data kehadiran yang sesuai dengan filter yang
+                  dipilih
+                </p>
               </div>
             ) : (
               filteredRecords.map((record) => (
@@ -573,25 +590,33 @@ export default function AttendanceHistoryPage() {
                             <div className="p-1 bg-blue-50 dark:bg-blue-900/20 rounded">
                               <Users className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                             </div>
-                            <span className="truncate">{record.department}</span>
+                            <span className="truncate">
+                              {record.department}
+                            </span>
                           </div>
                           <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                             <div className="p-1 bg-green-50 dark:bg-green-900/20 rounded">
                               <MapPin className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
                             </div>
-                            <span className="truncate">{record.location?.address}</span>
+                            <span className="truncate">
+                              {record.location?.address}
+                            </span>
                           </div>
                           <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                            <div className={`p-1 rounded ${
-                              record.checkInMethod === "qr_code" 
-                                ? "bg-purple-50 dark:bg-purple-900/20" 
-                                : record.checkInMethod === "manual"
-                                ? "bg-orange-50 dark:bg-orange-900/20"
-                                : "bg-indigo-50 dark:bg-indigo-900/20"
-                            }`}>
+                            <div
+                              className={`p-1 rounded ${
+                                record.checkInMethod === "qr_code"
+                                  ? "bg-purple-50 dark:bg-purple-900/20"
+                                  : record.checkInMethod === "manual"
+                                  ? "bg-orange-50 dark:bg-orange-900/20"
+                                  : "bg-indigo-50 dark:bg-indigo-900/20"
+                              }`}
+                            >
                               {getCheckInMethodIcon(record.checkInMethod)}
                             </div>
-                            <span className="truncate capitalize">{record.checkInMethod.replace("_", " ")}</span>
+                            <span className="truncate capitalize">
+                              {record.checkInMethod.replace("_", " ")}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -599,27 +624,35 @@ export default function AttendanceHistoryPage() {
                     <div className="flex flex-col items-end space-y-1.5 lg:min-w-[140px]">
                       <div className="text-right">
                         <div className="text-base font-semibold text-gray-900 dark:text-white">
-                          {new Date(record.checkedInAt).toLocaleTimeString("id-ID", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {new Date(record.checkedInAt).toLocaleTimeString(
+                            "id-ID",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
                         </div>
                         <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {new Date(record.checkedInAt).toLocaleDateString("id-ID", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric"
-                          })}
+                          {new Date(record.checkedInAt).toLocaleDateString(
+                            "id-ID",
+                            {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            }
+                          )}
                         </div>
                       </div>
                       <Badge
-                          className={`${getCheckInMethodColor(record.checkInMethod)} text-xs font-medium`}
-                        >
-                          <div className="flex items-center gap-1">
-                            {getCheckInMethodIcon(record.checkInMethod)}
-                            {record.checkInMethod}
-                          </div>
-                        </Badge>
+                        className={`${getCheckInMethodColor(
+                          record.checkInMethod
+                        )} text-xs font-medium`}
+                      >
+                        <div className="flex items-center gap-1">
+                          {getCheckInMethodIcon(record.checkInMethod)}
+                          {record.checkInMethod}
+                        </div>
+                      </Badge>
                       {record.deviceInfo && (
                         <div className="text-xs text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 px-2 py-0.5 rounded text-center max-w-[120px] truncate">
                           {record.deviceInfo}
