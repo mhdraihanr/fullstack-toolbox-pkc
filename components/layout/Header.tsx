@@ -19,7 +19,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   const { user } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 dark:bg-[#1E1E2D] backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 dark:border-border/20 bg-background/95 dark:bg-[#1E1E2D]/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm dark:shadow-lg dark:shadow-black/10">
       <div className="w-full flex h-14 items-center px-2 sm:px-4 lg:px-6 max-w-none">
         {/* Mobile menu button */}
         <Button
