@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tasks | Web Toolbox PKC",
-  description: "Kelola dan dokumentasikan tugas dengan mudah",
+  title: "Attendance | Web Toolbox PKC",
+  description: "Kelola dan dokumentasikan kehadiran dengan mudah",
 };
 
-export default function TasksLayout({
+export default function AttendanceLayout({
   children,
 }: {
   children: React.ReactNode;

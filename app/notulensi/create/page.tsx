@@ -302,7 +302,7 @@ export default function CreateNotulensiPage() {
             Buat Notulensi Baru
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Dokumentasikan hasil rapat dan action items
+            Dokumentasikan hasil rapat dan Tindak Lanjut
           </p>
         </div>
       </div>
@@ -456,7 +456,7 @@ export default function CreateNotulensiPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="w-5 h-5" />
-              Action Items
+              Tindak Lanjut
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -568,7 +568,7 @@ export default function CreateNotulensiPage() {
             {formData.action_items.length > 0 && (
               <div className="space-y-3">
                 <h4 className="font-medium text-gray-900 dark:text-white">
-                  Action Items ({formData.action_items.length})
+                  Tindak Lanjut ({formData.action_items.length})
                 </h4>
                 {formData.action_items.map((item, index) => {
                   const assignee = users.find((u) => u.id === item.assignee_id);

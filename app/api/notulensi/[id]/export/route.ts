@@ -180,49 +180,63 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
           color: #333;
           background: #fff;
           padding: 20px;
+          margin: 0;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          font-size: 18px;
+        }
+        
+        /* A4 Paper margins - Portrait orientation */
+        @page {
+          size: A4 portrait;
+          margin: 20mm 15mm 25mm 15mm; /* top right bottom left */
         }
         
         .container {
-          max-width: 800px;
+          max-width: 100%;
+          width: 100%;
           margin: 0 auto;
+          box-sizing: border-box;
         }
         
         .header {
           text-align: center;
-          margin-bottom: 30px;
-          padding-bottom: 20px;
+          margin-bottom: 20px;
+          padding-bottom: 15px;
           border-bottom: 2px solid #e5e7eb;
         }
         
         .header h1 {
           color: #1f2937;
-          font-size: 28px;
-          margin-bottom: 10px;
+          font-size: 32px;
+          margin-bottom: 8px;
+          font-weight: 700;
         }
         
         .header .subtitle {
           color: #6b7280;
-          font-size: 16px;
+          font-size: 18px;
         }
         
         .meeting-info {
           background: #f9fafb;
-          padding: 20px;
-          border-radius: 8px;
-          margin-bottom: 25px;
+          padding: 15px;
+          border-radius: 6px;
+          margin-bottom: 18px;
           border-left: 4px solid #3b82f6;
         }
         
         .meeting-info h2 {
           color: #1f2937;
-          margin-bottom: 15px;
-          font-size: 20px;
+          margin-bottom: 12px;
+          font-size: 22px;
         }
         
         .info-grid {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 15px;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 12px;
+          width: 100%;
         }
         
         .info-item {
@@ -233,46 +247,52 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
         .info-label {
           font-weight: 600;
           color: #374151;
-          margin-bottom: 8px;
-          font-size: 14px;
+          margin-bottom: 5px;
+          font-size: 16px;
         }
         
         .info-value {
           color: #6b7280;
-          font-size: 14px;
-          line-height: 1.5;
+          font-size: 16px;
+          line-height: 1.4;
         }
         
         .content-section {
-          margin-bottom: 25px;
+          margin-bottom: 18px;
           page-break-inside: avoid;
-          padding: 0 5px;
         }
         
         .content-section h3 {
           color: #2563eb;
-          margin-bottom: 18px;
+          margin-bottom: 12px;
           margin-top: 0;
-          font-size: 18px;
+          font-size: 22px;
           font-weight: 600;
-          border-bottom: 2px solid #e5e7eb;
-          padding-bottom: 10px;
+          border-bottom: 1px solid #e5e7eb;
+          padding-bottom: 6px;
         }
         
         .content {
           background: #fff;
-          padding: 20px;
+          padding: 15px 18px;
           border: 1px solid #e5e7eb;
-          border-radius: 8px;
+          border-radius: 6px;
           white-space: pre-wrap;
-          line-height: 1.8;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          line-height: 1.7;
+          min-height: auto;
+          box-sizing: border-box;
+          width: 100%;
+          font-size: 16px;
         }
         
         .signature-section {
-          margin-top: 40px;
+          margin-top: 25px;
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 40px;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 30px;
+          width: 100%;
         }
         
         .signature {
@@ -281,57 +301,141 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
         
         .signature-line {
           border-bottom: 1px solid #000;
-          margin: 40px 20px 10px 20px;
+          margin: 30px 15px 18px 15px;
         }
         
         .signature-label {
           font-weight: 600;
-          margin-bottom: 5px;
+          margin-bottom: 4px;
+          font-size: 16px;
         }
         
         .signature-name {
-          font-size: 14px;
+          font-size: 15px;
           color: #6b7280;
         }
         
         .footer {
-          margin-top: 50px;
-          padding-top: 25px;
+          margin-top: 30px;
+          padding-top: 15px;
           border-top: 1px solid #e5e7eb;
           text-align: center;
           color: #6b7280;
-          font-size: 12px;
+          font-size: 11px;
           page-break-inside: avoid;
+        }
+        
+        /* Responsive design for different paper sizes */
+        @media screen and (max-width: 768px) {
+          .container {
+            padding: 10px;
+          }
+          
+          .info-grid {
+            grid-template-columns: 1fr;
+          }
+          
+          .signature-section {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
         }
         
         /* Print styles for better PDF output */
         @media print {
+          * {
+            box-sizing: border-box;
+          }
+          
           body {
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            margin: 0;
+            padding: 0;
+            font-size: 18pt;
+            line-height: 1.7;
           }
           
           #pdf-content {
-            margin: 0;
-            padding: 20mm;
+            margin: 20mm 15mm 25mm 15mm;
+            padding: 0;
             box-shadow: none;
             max-width: none;
+            width: calc(210mm - 30mm); /* A4 width minus left and right margins */
+            overflow: hidden;
+          }
+          
+          .container {
+            max-width: 100%;
+            width: 100%;
           }
           
           .section, .content-section {
             page-break-inside: avoid;
+            margin-bottom: 12px;
+            overflow: hidden;
           }
           
           .signature-section {
             page-break-inside: avoid;
+            margin-top: 20px;
+            overflow: hidden;
           }
           
-          table {
-            page-break-inside: avoid;
+          .content {
+            padding: 8px 10px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+          }
+          
+          .meeting-info {
+            padding: 10px;
+            margin-bottom: 12px;
+            overflow: hidden;
           }
           
           .info-grid {
             page-break-inside: avoid;
+            gap: 6px;
+            overflow: hidden;
+          }
+          
+          .info-item {
+            overflow: hidden;
+          }
+          
+          .info-value {
+            word-break: break-word;
+            overflow-wrap: break-word;
+          }
+          
+          table {
+            page-break-inside: avoid;
+            width: 100%;
+            table-layout: fixed;
+          }
+          
+          /* Ensure text doesn't overflow */
+          h1, h2, h3, h4, h5, h6 {
+            word-break: break-word;
+            overflow-wrap: break-word;
+          }
+        }
+        
+        /* Additional paper size support */
+        @page :first {
+          margin-top: 20mm;
+        }
+        
+        /* Hide footer and buttons when printing/downloading PDF */
+        @media print {
+          .footer {
+            display: none !important;
+          }
+          
+          div[style*="text-align: center"] {
+            display: none !important;
           }
         }
       </style>
@@ -390,13 +494,9 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
             ? `
         <div class="content-section">
           <h3>Agenda Rapat</h3>
-          <div class="content">
-            <ol>
-              ${meeting.agenda
-                .map((item: string) => `<li>${item}</li>`)
-                .join("")}
-            </ol>
-          </div>
+          <div class="content">${meeting.agenda
+            .map((item: string, index: number) => `${index + 1}. ${item}`)
+            .join("\n")}</div>
         </div>
         `
             : ""
@@ -412,13 +512,11 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
             ? `
         <div class="content-section">
           <h3>Keputusan Rapat</h3>
-          <div class="content">
-            <ul>
-              ${notulensi.decisions
-                .map((decision: string) => `<li>${decision}</li>`)
-                .join("")}
-            </ul>
-          </div>
+          <div class="content">${notulensi.decisions
+            .map(
+              (decision: string, index: number) => `${index + 1}. ${decision}`
+            )
+            .join("\n")}</div>
         </div>
         `
             : ""
@@ -428,36 +526,35 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
           actionItems.length > 0
             ? `
         <div class="content-section">
-          <h3>Action Items</h3>
-          <div class="content">
-            ${actionItems
-              .map(
-                (item) => `
-              <div style="margin-bottom: 15px; padding: 10px; border-left: 3px solid #3b82f6; background: #f9fafb;">
-                <div style="font-weight: 600; margin-bottom: 5px;">${
-                  item.description
-                }</div>
-                <div style="font-size: 12px; color: #6b7280;">
-                  Status: ${
-                    item.status === "pending" ? "Pending" : "Selesai"
-                  } | 
-                  Prioritas: ${item.priority}
-                  ${
-                    item.assignee
-                      ? ` | Ditugaskan kepada: ${item.assignee.name}`
-                      : ""
-                  }
-                  ${
-                    item.due_date
-                      ? ` | Deadline: ${formatDate(item.due_date)}`
-                      : ""
-                  }
-                </div>
-              </div>
-            `
-              )
-              .join("")}
-          </div>
+          <h3>Tindak Lanjut</h3>
+          <div class="content">${actionItems
+            .map(
+              (item, index) =>
+                `${index + 1}. ${item.description}${
+                  item.assignee ? ` (PIC: ${item.assignee.name})` : ""
+                }${
+                  item.due_date
+                    ? ` <span style="background: #fecaca; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 500;">Deadline: ${formatDate(
+                        item.due_date
+                      )}</span>`
+                    : ""
+                }${
+                  item.priority
+                    ? ` <span style="background: #e0e7ff; color: #3730a3; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 500;">Prioritas: ${item.priority}</span>`
+                    : ""
+                }${
+                  item.status
+                    ? ` <span style="background: ${
+                        item.status === "pending" ? "#fef3c7" : "#d1fae5"
+                      }; color: ${
+                        item.status === "pending" ? "#92400e" : "#065f46"
+                      }; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 500;">Status: ${
+                        item.status === "pending" ? "Pending" : "Selesai"
+                      }</span>`
+                    : ""
+                }`
+            )
+            .join("\n")}</div>
         </div>
         `
             : ""
@@ -479,9 +576,9 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
         <div class="signature-section">
           <div class="signature">
             <div class="signature-label">Dibuat oleh</div>
-            <div class="signature-line"></div>
+            <div class="signature-line" style="margin: 150px 15px 15px 15px;"></div>
             <div class="signature-name">${creator?.name || "-"}</div>
-            <div style="font-size: 12px; color: #6b7280; margin-top: 5px;">
+            <div style="font-size: 14px; color: #6b7280; margin-top: 8px;">
               ${formatDate(notulensi.created_at)}
             </div>
           </div>
@@ -490,14 +587,14 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
             <div class="signature-label">${
               approver ? "Disetujui oleh" : "Mengetahui"
             }</div>
-            <div class="signature-line"></div>
+            <div class="signature-line" style="margin: 150px 15px 15px 15px;"></div>
             <div class="signature-name">${
               approver?.name || "(...........................)"
             }</div>
             ${
               approver && notulensi.approved_at
                 ? `
-            <div style="font-size: 12px; color: #6b7280; margin-top: 5px;">
+            <div style="font-size: 14px; color: #6b7280; margin-top: 8px;">
               ${formatDate(notulensi.approved_at)}
             </div>
             `
@@ -530,14 +627,16 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
             }
             
             const canvas = await html2canvas(element, {
-              scale: 2,
+              scale: 3,
               useCORS: true,
               allowTaint: true,
               backgroundColor: '#ffffff',
               width: element.scrollWidth,
               height: element.scrollHeight,
               scrollX: 0,
-              scrollY: 0
+              scrollY: 0,
+              dpi: 150,
+              logging: false
             });
             
             // Show buttons again
@@ -545,27 +644,34 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
               buttonContainer.style.display = 'block';
             }
             
-            const imgData = canvas.toDataURL('image/png', 1.0);
-            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgData = canvas.toDataURL('image/jpeg', 0.85);
             
             // A4 dimensions in mm with proper margins
             const pdfWidth = 210;
             const pdfHeight = 297;
-            const margin = 15; // 15mm margin on all sides
-            const contentWidth = pdfWidth - (margin * 2);
-            const contentHeight = pdfHeight - (margin * 2);
+            const pdf = new jsPDF({
+              orientation: 'portrait',
+              unit: 'mm',
+              format: [pdfWidth, pdfHeight]
+            });
+            const marginLeft = 15; // 15mm left margin
+            const marginRight = 15; // 15mm right margin
+            const marginTop = 20; // 20mm top margin
+            const marginBottom = 25; // 25mm bottom margin
+            const contentWidth = pdfWidth - (marginLeft + marginRight);
+            const contentHeight = pdfHeight - (marginTop + marginBottom);
             
             // Calculate image dimensions to fit within content area
             const imgWidth = contentWidth;
             const imgHeight = (canvas.height * contentWidth) / canvas.width;
             
-            let yPosition = margin;
+            let yPosition = marginTop;
             let remainingHeight = imgHeight;
             
             // Add first page
             if (imgHeight <= contentHeight) {
               // Image fits on one page
-              pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+              pdf.addImage(imgData, 'JPEG', marginLeft, yPosition, imgWidth, imgHeight);
             } else {
               // Image needs multiple pages
               let sourceY = 0;
@@ -589,8 +695,8 @@ function generateNotulensiHTML(notulensi: NotulensiWithDetails): string {
                   0, 0, canvas.width, currentSourceHeight
                 );
                 
-                const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
-                pdf.addImage(pageImgData, 'PNG', margin, margin, imgWidth, currentPageHeight);
+                const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.85);
+                pdf.addImage(pageImgData, 'JPEG', marginLeft, marginTop, imgWidth, currentPageHeight);
                 
                 remainingHeight -= currentPageHeight;
                 sourceY += currentSourceHeight;

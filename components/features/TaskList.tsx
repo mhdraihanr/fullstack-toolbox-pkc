@@ -187,17 +187,6 @@ function TaskItem({
           </div>
         )}
       </div>
-
-      {/* Assignee Avatar - Only shown if showAssignee is true */}
-      {showAssignee && task.assignee && (
-        <div className="hidden sm:flex flex-shrink-0 items-center space-x-2 ml-2 sm:ml-3">
-          <Avatar
-            src={task.assignee.avatar_url}
-            name={task.assignee.name}
-            size="sm"
-          />
-        </div>
-      )}
     </div>
   );
 }

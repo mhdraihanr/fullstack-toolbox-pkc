@@ -30,14 +30,16 @@ export function NotulensiCard({ notulensi, onViewDetail }: NotulensiCardProps) {
       return {
         label: "Approved",
         status: "completed" as const,
-        color: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
+        color:
+          "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
         icon: CheckCircle,
       };
     }
     return {
       label: "Pending Approval",
       status: "pending" as const,
-      color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400",
+      color:
+        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400",
       icon: AlertTriangle,
     };
   };
@@ -55,8 +57,10 @@ export function NotulensiCard({ notulensi, onViewDetail }: NotulensiCardProps) {
   const formatRelativeTime = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
+    const diffInHours = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+    );
+
     if (diffInHours < 1) {
       return "Baru saja";
     } else if (diffInHours < 24) {
@@ -73,7 +77,9 @@ export function NotulensiCard({ notulensi, onViewDetail }: NotulensiCardProps) {
 
   const approvalStatus = getApprovalStatus();
   const StatusIcon = approvalStatus.icon;
-  const completedActionItems = notulensi.action_items?.filter(item => item.status === "completed").length || 0;
+  const completedActionItems =
+    notulensi.action_items?.filter((item) => item.status === "completed")
+      .length || 0;
   const totalActionItems = notulensi.action_items?.length || 0;
 
   return (
@@ -88,12 +94,15 @@ export function NotulensiCard({ notulensi, onViewDetail }: NotulensiCardProps) {
               {notulensi.content.substring(0, 120)}...
             </p>
           </div>
-          <Badge status={approvalStatus.status} className={approvalStatus.color}>
+          <Badge
+            status={approvalStatus.status}
+            className={approvalStatus.color}
+          >
             {approvalStatus.label}
           </Badge>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Meeting Info */}
         {notulensi.meeting && (
@@ -108,7 +117,9 @@ export function NotulensiCard({ notulensi, onViewDetail }: NotulensiCardProps) {
         {/* Creator Info */}
         <div className="flex items-center gap-2">
           <User className="w-4 h-4 text-gray-400" />
-          <span className="text-sm text-gray-600 dark:text-gray-400">Dibuat oleh:</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            Dibuat oleh:
+          </span>
           <div className="flex items-center gap-2">
             <Avatar
               src={notulensi.creator?.avatar_url}
@@ -126,7 +137,9 @@ export function NotulensiCard({ notulensi, onViewDetail }: NotulensiCardProps) {
         {notulensi.approved_at && notulensi.approver && (
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-green-500" />
-            <span className="text-sm text-gray-600 dark:text-gray-400">Disetujui oleh:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              Disetujui oleh:
+            </span>
             <div className="flex items-center gap-2">
               <Avatar
                 src={notulensi.approver.avatar_url}
@@ -146,16 +159,20 @@ export function NotulensiCard({ notulensi, onViewDetail }: NotulensiCardProps) {
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-gray-400" />
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              Action Items:
+              Tindak Lanjut:
             </span>
             <span className="text-sm font-medium text-gray-900 dark:text-white">
               {completedActionItems}/{totalActionItems} completed
             </span>
-            {completedActionItems === totalActionItems && totalActionItems > 0 && (
-              <Badge status="completed" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 text-xs">
-                All Completed
-              </Badge>
-            )}
+            {completedActionItems === totalActionItems &&
+              totalActionItems > 0 && (
+                <Badge
+                  status="completed"
+                  className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400 text-xs"
+                >
+                  All Completed
+                </Badge>
+              )}
           </div>
         )}
 
@@ -188,7 +205,7 @@ export function NotulensiCard({ notulensi, onViewDetail }: NotulensiCardProps) {
             <Clock className="w-3 h-3" />
             <span>{formatRelativeTime(notulensi.created_at)}</span>
           </div>
-          
+
           {onViewDetail && (
             <Button
               variant="outline"

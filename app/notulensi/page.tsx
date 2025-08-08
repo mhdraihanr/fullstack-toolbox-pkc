@@ -63,10 +63,10 @@ export default function NotulensiPage() {
     deleteNotulensi,
     approveNotulensi,
     unapproveNotulensi,
-    exportToPDF
+    exportToPDF,
   } = useNotulensi({
     clientSideSearch: true,
-    limit: 1000
+    limit: 1000,
   });
 
   const filteredNotulensi = useMemo(() => {
@@ -242,7 +242,13 @@ export default function NotulensiPage() {
   };
 
   const handleDelete = async (notulensi: Notulensi) => {
-    if (confirm(`Apakah Anda yakin ingin menghapus notulensi "${notulensi.meeting?.title || 'Rapat'}"?`)) {
+    if (
+      confirm(
+        `Apakah Anda yakin ingin menghapus notulensi "${
+          notulensi.meeting?.title || "Rapat"
+        }"?`
+      )
+    ) {
       try {
         const success = await deleteNotulensi(notulensi.id);
         if (success) {
@@ -334,7 +340,9 @@ export default function NotulensiPage() {
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Memuat notulensi...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">
+              Memuat notulensi...
+            </p>
           </div>
         </div>
       </div>
@@ -522,7 +530,7 @@ export default function NotulensiPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Total Action Items
+                  Total Tindak Lanjut
                 </p>
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {allNotulensi.reduce(
@@ -584,7 +592,7 @@ export default function NotulensiPage() {
                   </th>
                   <th className="text-left py-4 px-4 w-36">
                     <span className="font-medium text-gray-900 dark:text-white">
-                      Action Items
+                      Tindak Lanjut
                     </span>
                   </th>
                   <th className="text-left py-4 px-4 w-24">
@@ -728,11 +736,13 @@ export default function NotulensiPage() {
                       </Badge>
                     </div>
 
-                    {/* Creator and Date Grid */}
+                    {/* Details Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                       {/* Creator */}
                       <div className="flex items-center gap-2">
-                        <span className="text-gray-500 dark:text-gray-400 font-medium">Dibuat oleh:</span>
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">
+                          Dibuat oleh:
+                        </span>
                         <div className="flex items-center gap-2 min-w-0">
                           <Avatar
                             src={notulensi.creator?.avatar_url}
@@ -748,7 +758,9 @@ export default function NotulensiPage() {
 
                       {/* Date */}
                       <div className="flex items-center gap-2">
-                        <span className="text-gray-500 dark:text-gray-400 font-medium">Tanggal:</span>
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">
+                          Tanggal:
+                        </span>
                         <div className="text-gray-600 dark:text-gray-400">
                           <div className="hidden sm:block">
                             {formatDate(notulensi.created_at)}
@@ -758,26 +770,33 @@ export default function NotulensiPage() {
                           </div>
                         </div>
                       </div>
+
+                      {/* Action Items */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500 dark:text-gray-400 font-medium">
+                          Action Items:
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-900 dark:text-white">
+                            {notulensi.action_items?.length || 0} item
+                          </span>
+                          {(notulensi.action_items?.length || 0) > 0 && (
+                            <Badge
+                              variant="secondary"
+                              className="text-xs whitespace-nowrap"
+                            >
+                              {notulensi.action_items?.filter(
+                                (item) => item.status === "completed"
+                              ).length || 0}{" "}
+                              completed
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Action Items and Button */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm text-gray-900 dark:text-white">
-                          {notulensi.action_items?.length || 0} action item
-                        </span>
-                        {(notulensi.action_items?.length || 0) > 0 && (
-                          <Badge
-                            variant="secondary"
-                            className="text-xs whitespace-nowrap"
-                          >
-                            {notulensi.action_items?.filter(
-                              (item) => item.status === "completed"
-                            ).length || 0}{" "}
-                            completed
-                          </Badge>
-                        )}
-                      </div>
+                    {/* Action Button */}
+                    <div className="flex justify-end">
                       <Button
                         variant="whiteLine"
                         size="sm"
@@ -950,7 +969,7 @@ export default function NotulensiPage() {
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                           <Users className="w-5 h-5" />
-                          Action Items
+                          Tindak Lanjut
                         </CardTitle>
                       </CardHeader>
                       <CardContent>

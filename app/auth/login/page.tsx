@@ -120,7 +120,7 @@ export default function LoginPage() {
                   autoComplete="email"
                   required
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors text-gray-900 placeholder-gray-500"
-                  placeholder="Masukkan email Anda"
+                  placeholder="andripo190@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -139,7 +139,7 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   required
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors text-gray-900 placeholder-gray-500"
-                  placeholder="Masukkan password Anda"
+                  placeholder="demo123"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

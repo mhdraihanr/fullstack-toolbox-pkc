@@ -125,103 +125,112 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 lg:space-y-8  dark:text-white min-h-screen p-4 sm:p-6 lg:p-8">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+    <div className="space-y-6 dark:text-white min-h-screen p-6">
+      {/* Welcome Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight mb-1 sm:mb-2">
-            Dashboard
+          <h1 className="text-2xl font-semibold text-foreground mb-1">
+            Selamat datang kembali!
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-            Selamat datang di Web Toolbox PKC. Berikut adalah ringkasan
-            aktivitas Anda.
+          <p className="text-muted-foreground">
+            Berikut adalah ringkasan aktivitas Anda hari ini.
           </p>
         </div>
-        <div className="text-xs sm:text-sm lg:text-base text-muted-foreground font-medium flex-shrink-0">
+        <div className="text-sm text-muted-foreground font-medium px-4 py-2 rounded-lg bg-muted/50 border">
           {new Date().toLocaleDateString("id-ID", {
             weekday: "long",
-            year: "numeric",
-            month: "long",
             day: "numeric",
+            month: "long",
+            year: "numeric",
           })}
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard
           title="Total Tasks"
           value={stats.totalTasks}
-          description="total tugas"
           icon={<CheckSquare className="h-5 w-5" />}
           trend={{
-            value:
-              stats.totalTasks > 0
-                ? Math.round((stats.completedTasks / stats.totalTasks) * 100)
-                : 0,
-            isPositive: stats.completedTasks > 0,
+            value: stats.completedTasks,
+            isPositive: true,
           }}
+          className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/30 border-blue-200 dark:border-blue-800"
         />
         <StatsCard
-          title="In Progress"
-          value={stats.inProgressTasks}
-          description="sedang dikerjakan"
+          title="Pending Tasks"
+          value={stats.pendingTasks}
           icon={<Clock className="h-5 w-5" />}
           trend={{
-            value:
-              stats.pendingTasks > 0
-                ? Math.round((stats.pendingTasks / stats.totalTasks) * 100)
-                : 0,
-            isPositive: stats.pendingTasks === 0,
+            value: stats.pendingTasks,
+            isPositive: false,
           }}
+          className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/30 border-orange-200 dark:border-orange-800"
         />
         <StatsCard
-          title="Completed"
-          value={stats.completedTasks}
-          description="selesai"
-          icon={<CheckSquare className="h-5 w-5" />}
+          title="Meetings"
+          value={stats.upcomingMeetings}
+          icon={<Calendar className="h-5 w-5" />}
           trend={{
-            value:
-              stats.totalTasks > 0
-                ? Math.round((stats.completedTasks / stats.totalTasks) * 100)
-                : 0,
-            isPositive: stats.completedTasks > stats.pendingTasks,
+            value: stats.upcomingMeetings,
+            isPositive: true,
           }}
+          className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/30 dark:to-green-900/30 border-green-200 dark:border-green-800"
         />
         <StatsCard
-          title="Overdue"
-          value={stats.overdueTasks}
-          description={stats.overdueTasks === 0 ? "tepat waktu" : "terlambat"}
+          title="Productivity"
+          value={`${
+            Math.round((stats.completedTasks / stats.totalTasks) * 100) || 0
+          }%`}
           icon={<TrendingUp className="h-5 w-5" />}
           trend={{
-            value: stats.overdueTasks,
-            isPositive: stats.overdueTasks === 0,
+            value: stats.completedTasks,
+            isPositive: true,
           }}
+          className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 border-purple-200 dark:border-purple-800"
         />
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 lg:grid-cols-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Tasks and Charts */}
-        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+        <div className="lg:col-span-2">
           {/* Recent Tasks */}
-          <TaskList
-            title="Recent Tasks"
-            limit={5}
-            showHeader={true}
-            showAssignee={true}
-            tasks={tasks}
-            loading={tasksLoading}
-            error={tasksError}
-          />
+          <div className=" dark:bg-slate-900 border rounded-xl p-6 mb-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-semibold text-foreground mb-1">
+                  Recent Tasks
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Your latest task activities
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground px-3 py-1.5 rounded-lg bg-muted/50 border">
+                  {tasks.length} tasks
+                </span>
+              </div>
+            </div>
+            <TaskList
+              limit={5}
+              showHeader={false}
+              showAssignee={true}
+              tasks={tasks}
+              loading={tasksLoading}
+              error={tasksError}
+            />
+          </div>
 
           {/* Charts Row */}
-          <div className="grid gap-3 sm:gap-4 lg:gap-6 grid-cols-1 md:grid-cols-2">
+          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 mb-6">
             <ChartCard
               title="Task Status Overview"
               description="Distribusi status tasks saat ini"
               data={taskStatusData}
               type="bar"
+              className="bg-card border rounded-xl"
             />
             <ChartCard
               title="Meeting Attendance Trend"
@@ -233,6 +242,7 @@ export default function DashboardPage() {
                 isPositive: true,
                 period: "bulan lalu",
               }}
+              className="bg-card border rounded-xl"
             />
           </div>
 
@@ -242,16 +252,27 @@ export default function DashboardPage() {
             description="Distribusi tasks berdasarkan departemen"
             data={departmentTasksData}
             type="pie"
+            className="bg-card border rounded-xl"
           />
         </div>
 
-        {/* Right Column - Upcoming Meetings and Quick Info */}
-        <div className="space-y-4 sm:space-y-6">
+        {/* Right Column - Meetings and Quick Actions */}
+        <div className="space-y-6">
           {/* Upcoming Meetings */}
-          <div className="space-y-3 sm:space-y-4">
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold">
-              Upcoming Meetings
-            </h3>
+          <div className=" dark:bg-slate-900 border rounded-xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-semibold text-foreground mb-1">
+                  Upcoming Meetings
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Your scheduled meetings
+                </p>
+              </div>
+              <span className="text-sm text-muted-foreground px-3 py-1.5 rounded-lg bg-muted/50 border">
+                {meetings.length} meetings
+              </span>
+            </div>
             {meetingsLoading ? (
               <div className="flex items-center justify-center p-8">
                 <div className="flex items-center gap-2">
@@ -270,18 +291,18 @@ export default function DashboardPage() {
                 No upcoming meetings
               </div>
             ) : (
-              <div className="space-y-2 sm:space-y-3">
+              <div className="space-y-4">
                 {upcomingMeetings.map((meeting) => (
                   <div
                     key={meeting.id}
-                    className="p-2 sm:p-3 lg:p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                    className="p-4 rounded-lg border bg-muted/20 hover:bg-muted/40 transition-colors"
                   >
-                    <div className="flex flex-col gap-2">
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-xs sm:text-sm lg:text-base leading-tight break-words">
+                    <div className="flex items-start justify-between">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-medium text-foreground truncate">
                           {meeting.title}
-                        </h4>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        </h3>
+                        <p className="text-sm text-muted-foreground mt-1">
                           {new Date(meeting.date_time).toLocaleDateString(
                             "id-ID",
                             {
@@ -292,22 +313,23 @@ export default function DashboardPage() {
                             }
                           )}
                         </p>
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1.5">
+                        <div className="flex items-center gap-3 mt-2">
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Clock className="w-3 h-3 flex-shrink-0" />
+                            <Clock className="w-3 h-3" />
                             <span>{meeting.duration} min</span>
                           </div>
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Users className="w-3 h-3 flex-shrink-0" />
+                            <Users className="w-3 h-3" />
                             <span>
                               {meeting.participants?.length || 0} peserta
                             </span>
                           </div>
                         </div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          📍 {meeting.location}
+                        </div>
                       </div>
-                      <div className="text-xs text-muted-foreground break-words leading-tight">
-                        📍 {meeting.location}
-                      </div>
+                      <Calendar className="h-4 w-4 text-muted-foreground ml-2" />
                     </div>
                   </div>
                 ))}
@@ -316,27 +338,59 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="p-3 sm:p-4 lg:p-5 border rounded-lg">
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-3 sm:mb-4">
-              Quick Actions
-            </h3>
-            <div className="space-y-2 sm:space-y-3">
-              <button className="w-full text-left p-2 sm:p-3 rounded hover:bg-muted transition-colors text-sm sm:text-base">
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                  <span className="truncate">Create Task</span>
+          <div className=" dark:bg-slate-900 border rounded-xl p-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-foreground mb-1">
+                Quick Actions
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Common tasks and shortcuts
+              </p>
+            </div>
+            <div className="space-y-3">
+              <button className="w-full p-4 text-left rounded-lg border bg-muted/20 hover:bg-muted/40 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
+                    <CheckSquare className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">
+                      Create New Task
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Add a new task to your list
+                    </p>
+                  </div>
                 </div>
               </button>
-              <button className="w-full text-left p-2 sm:p-3 rounded hover:bg-muted transition-colors text-sm sm:text-base">
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                  <span className="truncate">Schedule Meeting</span>
+              <button className="w-full p-4 text-left rounded-lg border bg-muted/20 hover:bg-muted/40 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30 group-hover:bg-green-200 dark:group-hover:bg-green-900/50 transition-colors">
+                    <Calendar className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">
+                      Schedule Meeting
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Plan your next meeting
+                    </p>
+                  </div>
                 </div>
               </button>
-              <button className="w-full text-left p-2 sm:p-3 rounded hover:bg-muted transition-colors text-sm sm:text-base">
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <FileText className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                  <span className="truncate">Create Notulensi</span>
+              <button className="w-full p-4 text-left rounded-lg border bg-muted/20 hover:bg-muted/40 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
+                    <FileText className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">
+                      Create Notulensi
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Document meeting notes
+                    </p>
+                  </div>
                 </div>
               </button>
             </div>

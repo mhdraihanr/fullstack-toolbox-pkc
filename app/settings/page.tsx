@@ -92,7 +92,7 @@ export default function SettingsPage() {
       const userRole = profile?.role || user?.user_metadata?.role || "employee";
       const avatarUrl = profile?.avatar_url || user?.user_metadata?.avatar_url;
 
-      setSettings(prev => ({
+      setSettings((prev) => ({
         ...prev,
         profile: {
           name: userName,
@@ -111,10 +111,10 @@ export default function SettingsPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       console.log("Settings saved:", settings);
-      
+
       // Show success toast
       showToast("Pengaturan berhasil disimpan!", "success");
-      
+
       // Here you would typically make an API call to save the settings
     } catch (error) {
       console.error("Error saving settings:", error);
@@ -146,22 +146,22 @@ export default function SettingsPage() {
     try {
       // Upload to server using new settings API
       const formData = new FormData();
-      formData.append('avatar', file);
-      
-      const response = await fetch('/api/settings', {
-        method: 'POST',
-        body: formData
+      formData.append("avatar", file);
+
+      const response = await fetch("/api/settings", {
+        method: "POST",
+        body: formData,
       });
-      
+
       const result = await response.json();
-      
+
       if (!result.success) {
-        throw new Error(result.error || 'Upload failed');
+        throw new Error(result.error || "Upload failed");
       }
-      
+
       // Refresh profile data in AuthProvider to update header and local state
       await refreshProfile();
-      
+
       console.log("Photo uploaded successfully");
       showToast("Foto profil berhasil diperbarui!", "success");
     } catch (error) {
@@ -570,83 +570,61 @@ export default function SettingsPage() {
           </p>
         </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardContent className="p-4">
-              <nav className="space-y-2">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                        activeTab === tab.id
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-muted"
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span className="text-sm font-medium">{tab.label}</span>
-                    </button>
-                  );
-                })}
-              </nav>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <Card>
+              <CardContent className="p-4">
+                <nav className="space-y-2">
+                  {tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                          activeTab === tab.id
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-muted"
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span className="text-sm font-medium">{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  {(() => {
+                    const activeTabData = tabs.find(
+                      (tab) => tab.id === activeTab
+                    );
+                    const Icon = activeTabData?.icon || Settings;
+                    return (
+                      <>
+                        <Icon className="w-5 h-5" />
+                        <span>{activeTabData?.label}</span>
+                      </>
+                    );
+                  })()}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {renderTabContent()}
+
+                <Separator />
+              </CardContent>
+            </Card>
+          </div>
         </div>
-
-        {/* Main Content */}
-        <div className="lg:col-span-3">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                {(() => {
-                  const activeTabData = tabs.find(
-                    (tab) => tab.id === activeTab
-                  );
-                  const Icon = activeTabData?.icon || Settings;
-                  return (
-                    <>
-                      <Icon className="w-5 h-5" />
-                      <span>{activeTabData?.label}</span>
-                    </>
-                  );
-                })()}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {renderTabContent()}
-
-              <Separator />
-
-              <div className="flex justify-end space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={() => window.location.reload()}
-                >
-                  Reset
-                </Button>
-                <Button onClick={handleSave} disabled={isLoading}>
-                  {isLoading ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                      <span>Menyimpan...</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center space-x-2">
-                      <Save className="w-4 h-4" />
-                      <span>Simpan Perubahan</span>
-                    </div>
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
       </div>
       <ToastContainer />
     </>

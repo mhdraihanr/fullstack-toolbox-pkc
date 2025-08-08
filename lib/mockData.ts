@@ -393,71 +393,86 @@ export function getNotulensiWithData(): (Notulensi & {
 }
 
 // Function to add new meeting
-export function addMeeting(meetingData: Omit<Meeting, 'id' | 'created_at' | 'updated_at'>, participantIds: string[] = []): Meeting {
+export function addMeeting(
+  meetingData: Omit<Meeting, "id" | "created_at" | "updated_at">,
+  participantIds: string[] = []
+): Meeting {
   const newId = (mockMeetings.length + 1).toString();
   const now = new Date().toISOString();
-  
+
   const newMeeting: Meeting = {
     ...meetingData,
     id: newId,
     created_at: now,
     updated_at: now,
   };
-  
+
   // Add meeting to mock data
   mockMeetings.push(newMeeting);
-  
+
   // Add participants
   participantIds.forEach((userId, index) => {
-    const participantId = (mockMeetingParticipants.length + index + 1).toString();
+    const participantId = (
+      mockMeetingParticipants.length +
+      index +
+      1
+    ).toString();
     mockMeetingParticipants.push({
       id: participantId,
       meeting_id: newId,
       user_id: userId,
-      status: 'accepted',
+      status: "accepted",
       created_at: now,
     });
   });
-  
+
   return newMeeting;
 }
 
 // Function to update meeting
-export function updateMeeting(meetingId: string, meetingData: Partial<Meeting>, participantIds?: string[]): Meeting | null {
-  const meetingIndex = mockMeetings.findIndex(m => m.id === meetingId);
+export function updateMeeting(
+  meetingId: string,
+  meetingData: Partial<Meeting>,
+  participantIds?: string[]
+): Meeting | null {
+  const meetingIndex = mockMeetings.findIndex((m) => m.id === meetingId);
   if (meetingIndex === -1) return null;
-  
+
   const now = new Date().toISOString();
   mockMeetings[meetingIndex] = {
     ...mockMeetings[meetingIndex],
     ...meetingData,
     updated_at: now,
   };
-  
+
   // Update participants if provided
   if (participantIds) {
     // Remove existing participants
     const existingParticipantIndices = mockMeetingParticipants
-      .map((p, index) => p.meeting_id === meetingId ? index : -1)
-      .filter(index => index !== -1)
+      .map((p, index) => (p.meeting_id === meetingId ? index : -1))
+      .filter((index) => index !== -1)
       .reverse(); // Reverse to avoid index shifting issues
-    
-    existingParticipantIndices.forEach(index => {
+
+    existingParticipantIndices.forEach((index) => {
       mockMeetingParticipants.splice(index, 1);
     });
-    
+
     // Add new participants
     participantIds.forEach((userId, index) => {
-      const participantId = (mockMeetingParticipants.length + index + 1).toString();
+      const participantId = (
+        mockMeetingParticipants.length +
+        index +
+        1
+      ).toString();
       mockMeetingParticipants.push({
         id: participantId,
         meeting_id: meetingId,
         user_id: userId,
-        status: 'accepted',
+        status: "accepted",
         created_at: now,
       });
     });
   }
-  
+
   return mockMeetings[meetingIndex];
 }

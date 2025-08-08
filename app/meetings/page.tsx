@@ -14,6 +14,7 @@ import {
   AlertTriangle,
   X,
   ChevronDown,
+  Eye,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../components/ui/Button";
@@ -70,39 +71,42 @@ export default function MeetingsPage() {
     loading,
     error,
     updateMeetingStatus,
-    refetch
+    refetch,
   } = useMeetings({
     limit: 1000,
     clientSideSearch: true,
     search: searchQuery,
-    status: filters.status?.join(','),
-    meeting_type: filters.meeting_type?.join(','),
-    created_by: filters.created_by
+    status: filters.status?.join(","),
+    meeting_type: filters.meeting_type?.join(","),
+    created_by: filters.created_by,
   });
 
   // Handle status update
-  const handleStatusUpdate = async (meetingId: string, newStatus: Meeting['status']) => {
+  const handleStatusUpdate = async (
+    meetingId: string,
+    newStatus: Meeting["status"]
+  ) => {
     try {
       await updateMeetingStatus(meetingId, newStatus);
       // The hook will automatically update the local state
     } catch (error) {
-      console.error('Error updating meeting status:', error);
+      console.error("Error updating meeting status:", error);
       // You could add a toast notification here
-      alert('Gagal mengupdate status meeting. Silakan coba lagi.');
+      alert("Gagal mengupdate status meeting. Silakan coba lagi.");
     }
   };
 
   // Function to get status label in Indonesian
-  const getStatusLabel = (status: Meeting['status']) => {
+  const getStatusLabel = (status: Meeting["status"]) => {
     switch (status) {
-      case 'scheduled':
-        return 'Terjadwal';
-      case 'in-progress':
-        return 'Berlangsung';
-      case 'completed':
-        return 'Selesai';
-      case 'cancelled':
-        return 'Dibatalkan';
+      case "scheduled":
+        return "Terjadwal";
+      case "in-progress":
+        return "Berlangsung";
+      case "completed":
+        return "Selesai";
+      case "cancelled":
+        return "Dibatalkan";
       default:
         return status;
     }
@@ -200,7 +204,7 @@ export default function MeetingsPage() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 dark:bg-[#1E1E2D] dark:text-white min-h-screen p-4 sm:p-6 lg:p-8">
+    <div className="space-y-4 sm:space-y-6  dark:text-white min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col space-y-3 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
@@ -231,128 +235,300 @@ export default function MeetingsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col space-y-3 sm:flex-row sm:gap-4 sm:space-y-0">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Cari meeting..."
-            className="pl-10 pr-4 py-2 w-full border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-sm sm:text-base"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="whiteLine" className="w-full sm:w-auto">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80">
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Status</label>
-                <div className="mt-2 space-y-2">
-                  {statusOptions.map((status) => (
-                    <label key={status} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={filters.status?.includes(status) || false}
-                        onChange={(e) => {
-                          const newStatus = e.target.checked
-                            ? [...(filters.status || []), status]
-                            : (filters.status || []).filter(
-                                (s) => s !== status
-                              );
-                          setFilters({ ...filters, status: newStatus });
-                        }}
-                      />
-                      <span className="text-sm capitalize">{status}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Tipe Meeting</label>
-                <div className="mt-2 space-y-2">
-                  {typeOptions.map((type) => (
-                    <label key={type} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        className="mr-2"
-                        checked={filters.meeting_type?.includes(type) || false}
-                        onChange={(e) => {
-                          const newType = e.target.checked
-                            ? [...(filters.meeting_type || []), type]
-                            : (filters.meeting_type || []).filter(
-                                (t) => t !== type
-                              );
-                          setFilters({ ...filters, meeting_type: newType });
-                        }}
-                      />
-                      <span className="text-sm capitalize">{type}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+      {/* Search and Filters */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Cari meeting..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-          </PopoverContent>
-        </Popover>
-      </div>
+            <div className="flex flex-wrap gap-2 items-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="whiteLine" className="rounded-lg">
+                    <Filter className="w-4 h-4 mr-2" />
+                    Filter
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium">Status</label>
+                      <div className="mt-2 space-y-2">
+                        {statusOptions.map((status) => (
+                          <label key={status} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              className="mr-2"
+                              checked={
+                                filters.status?.includes(status) || false
+                              }
+                              onChange={(e) => {
+                                const newStatus = e.target.checked
+                                  ? [...(filters.status || []), status]
+                                  : (filters.status || []).filter(
+                                      (s) => s !== status
+                                    );
+                                setFilters({ ...filters, status: newStatus });
+                              }}
+                            />
+                            <span className="text-sm capitalize">{status}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
 
-      <div className="bg-card rounded-lg shadow border border-border">
-        {/* Desktop Table Header */}
-        <div className="hidden lg:grid grid-cols-12 gap-3 p-3 border-b font-medium text-xs">
-          <div className="col-span-2">Status</div>
-          <div className="col-span-3">
-            <button
-              className="flex items-center gap-1 hover:text-primary"
-              onClick={() => toggleSort("title")}
-            >
-              Judul & Deskripsi
-              <ArrowUpDown className="w-3 h-3" />
-            </button>
-          </div>
-          <div className="col-span-2">
-            <button
-              className="flex items-center gap-1 hover:text-blue-600"
-              onClick={() => toggleSort("date_time")}
-            >
-              Waktu
-              <ArrowUpDown className="w-3 h-3" />
-            </button>
-          </div>
-          <div className="col-span-2">Lokasi</div>
-          <div className="col-span-2">Tipe</div>
-          <div className="col-span-1">Aksi</div>
-        </div>
-
-        <div className="divide-y">
-          {loading ? (
-            <div className="text-center py-8 sm:py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-sm text-muted-foreground">
-                Memuat meetings...
-              </p>
+                    <div>
+                      <label className="text-sm font-medium">
+                        Tipe Meeting
+                      </label>
+                      <div className="mt-2 space-y-2">
+                        {typeOptions.map((type) => (
+                          <label key={type} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              className="mr-2"
+                              checked={
+                                filters.meeting_type?.includes(type) || false
+                              }
+                              onChange={(e) => {
+                                const newType = e.target.checked
+                                  ? [...(filters.meeting_type || []), type]
+                                  : (filters.meeting_type || []).filter(
+                                      (t) => t !== type
+                                    );
+                                setFilters({
+                                  ...filters,
+                                  meeting_type: newType,
+                                });
+                              }}
+                            />
+                            <span className="text-sm capitalize">{type}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
-          ) : (
-            sortedMeetings.map((meeting) => (
-              <div key={meeting.id}>
-                {/* Desktop Layout */}
-                <div className="hidden lg:grid grid-cols-12 gap-3 p-3 hover:bg-muted/50 items-center">
-                  <div className="col-span-2">
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>Daftar Meetings ({sortedMeetings.length})</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="w-full min-w-[900px] table-auto">
+              <thead>
+                <tr className="border-b border-gray-200 dark:border-gray-700">
+                  <th className="text-left py-4 px-4 w-40">
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      Status
+                    </span>
+                  </th>
+                  <th className="text-left py-4 px-4 w-auto">
+                    <button
+                      onClick={() => toggleSort("title")}
+                      className="flex items-center gap-1 font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
+                    >
+                      Judul & Deskripsi
+                      <ArrowUpDown className="w-4 h-4" />
+                    </button>
+                  </th>
+                  <th className="text-left py-4 px-4 w-44">
+                    <button
+                      onClick={() => toggleSort("date_time")}
+                      className="flex items-center gap-1 font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
+                    >
+                      Waktu
+                      <ArrowUpDown className="w-4 h-4" />
+                    </button>
+                  </th>
+                  <th className="text-left py-4 px-4 w-40">
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      Lokasi
+                    </span>
+                  </th>
+                  <th className="text-left py-4 px-4 w-36">
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      Tipe
+                    </span>
+                  </th>
+                  <th className="text-left py-4 px-4 w-24">
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      Aksi
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={6} className="text-center py-8 sm:py-12">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                      <p className="text-sm text-muted-foreground">
+                        Memuat meetings...
+                      </p>
+                    </td>
+                  </tr>
+                ) : (
+                  sortedMeetings.map((meeting) => (
+                    <tr
+                      key={meeting.id}
+                      className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                    >
+                      <td className="py-5 px-4">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <button className="flex items-center gap-1 hover:opacity-80 transition-opacity">
+                              <Badge
+                                className={`${getStatusColor(
+                                  meeting.status
+                                )} text-xs cursor-pointer whitespace-nowrap`}
+                              >
+                                {getStatusLabel(meeting.status)}
+                              </Badge>
+                              <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-40 p-1">
+                            <div className="space-y-1">
+                              {statusOptions.map((status) => (
+                                <button
+                                  key={status}
+                                  onClick={() =>
+                                    handleStatusUpdate(meeting.id, status)
+                                  }
+                                  className={`w-full text-left px-2 py-1.5 text-sm rounded-md hover:bg-muted transition-colors ${
+                                    meeting.status === status
+                                      ? "bg-muted font-medium"
+                                      : ""
+                                  }`}
+                                >
+                                  <Badge
+                                    className={`${getStatusColor(
+                                      status
+                                    )} text-xs`}
+                                  >
+                                    {getStatusLabel(status)}
+                                  </Badge>
+                                </button>
+                              ))}
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </td>
+                      <td className="py-5 px-4">
+                        <div>
+                          <h3 className="font-medium text-gray-900 dark:text-white truncate">
+                            {meeting.title}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                            {meeting.description}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-5 px-4">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          <div className="flex items-center gap-1 mb-1">
+                            <Calendar className="w-3 h-3 text-muted-foreground" />
+                            <span className="truncate">
+                              {formatRelativeTime(meeting.date_time)}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-muted-foreground" />
+                            <span>{formatDuration(meeting.duration)}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-5 px-4">
+                        <div className="flex items-center gap-1 text-sm text-gray-900 dark:text-white">
+                          {getTypeIcon(meeting.meeting_type)}
+                          <span className="truncate">{meeting.location}</span>
+                        </div>
+                      </td>
+                      <td className="py-5 px-4">
+                        <Badge
+                          variant="outline"
+                          className="capitalize text-xs whitespace-nowrap"
+                        >
+                          {meeting.meeting_type}
+                        </Badge>
+                      </td>
+                      <td className="py-5 px-4">
+                        <Link href={`/meetings/${meeting.id}`}>
+                          <Button
+                            variant="whiteLine"
+                            size="sm"
+                            className="flex items-center gap-1 text-xs sm:text-sm"
+                          >
+                            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Detail</span>
+                          </Button>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+
+            {!loading && sortedMeetings.length === 0 && (
+              <div className="text-center py-12">
+                <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                  Tidak ada meeting
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  Tidak ada meeting yang sesuai dengan filter Anda.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Layout */}
+          <div className="lg:hidden space-y-4">
+            {sortedMeetings.map((meeting) => (
+              <div
+                key={meeting.id}
+                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 dark:bg-[#1E1E2D]"
+              >
+                <div className="space-y-3">
+                  {/* Meeting Title and Status */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-sm sm:text-base text-gray-900 dark:text-white truncate">
+                        {meeting.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                        {meeting.description}
+                      </p>
+                    </div>
                     <Popover>
                       <PopoverTrigger asChild>
                         <button className="flex items-center gap-1 hover:opacity-80 transition-opacity">
                           <Badge
-                             className={`${getStatusColor(meeting.status)} text-xs cursor-pointer`}
-                           >
-                             {getStatusLabel(meeting.status)}
-                           </Badge>
+                            className={`${getStatusColor(
+                              meeting.status
+                            )} text-xs whitespace-nowrap cursor-pointer`}
+                          >
+                            {getStatusLabel(meeting.status)}
+                          </Badge>
                           <ChevronDown className="w-3 h-3 text-muted-foreground" />
                         </button>
                       </PopoverTrigger>
@@ -361,16 +537,20 @@ export default function MeetingsPage() {
                           {statusOptions.map((status) => (
                             <button
                               key={status}
-                              onClick={() => handleStatusUpdate(meeting.id, status)}
+                              onClick={() =>
+                                handleStatusUpdate(meeting.id, status)
+                              }
                               className={`w-full text-left px-2 py-1.5 text-sm rounded-md hover:bg-muted transition-colors ${
-                                meeting.status === status ? 'bg-muted font-medium' : ''
+                                meeting.status === status
+                                  ? "bg-muted font-medium"
+                                  : ""
                               }`}
                             >
                               <Badge
-                                  className={`${getStatusColor(status)} text-xs`}
-                                >
-                                  {getStatusLabel(status)}
-                                </Badge>
+                                className={`${getStatusColor(status)} text-xs`}
+                              >
+                                {getStatusLabel(status)}
+                              </Badge>
                             </button>
                           ))}
                         </div>
@@ -378,153 +558,91 @@ export default function MeetingsPage() {
                     </Popover>
                   </div>
 
-                  <div className="mr-5 col-span-3 min-w-0">
-                    <div className="space-y-0.5">
-                      <h3 className="font-medium text-sm truncate">
-                        {meeting.title}
-                      </h3>
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {meeting.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="ml-2 col-span-2">
-                    <div className="flex items-center gap-1 text-xs">
-                      <Calendar className="w-3 h-3 text-muted-foreground" />
-                      <span className="truncate">
-                        {formatRelativeTime(meeting.date_time)}
+                  {/* Meeting Details Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                    {/* Date */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500 dark:text-gray-400 font-medium">
+                        Waktu:
                       </span>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                        <span className="text-gray-900 dark:text-white">
+                          {formatRelativeTime(meeting.date_time)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Clock className="w-3 h-3 text-muted-foreground" />
-                      <span>{formatDuration(meeting.duration)}</span>
+
+                    {/* Duration */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500 dark:text-gray-400 font-medium">
+                        Durasi:
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                        <span className="text-gray-900 dark:text-white">
+                          {formatDuration(meeting.duration)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Location */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500 dark:text-gray-400 font-medium">
+                        Lokasi:
+                      </span>
+                      <div className="flex items-center gap-1 min-w-0">
+                        {getTypeIcon(meeting.meeting_type)}
+                        <span className="text-gray-900 dark:text-white truncate">
+                          {meeting.location}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Type */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500 dark:text-gray-400 font-medium">
+                        Tipe:
+                      </span>
+                      <Badge variant="outline" className="capitalize text-xs">
+                        {meeting.meeting_type}
+                      </Badge>
                     </div>
                   </div>
 
-                  <div className="col-span-2">
-                    <div className="flex items-center gap-1 text-xs">
-                      {getTypeIcon(meeting.meeting_type)}
-                      <span className="truncate">{meeting.location}</span>
-                    </div>
-                  </div>
-
-                  <div className="col-span-2">
-                    <Badge variant="outline" className="capitalize text-xs">
-                      {meeting.meeting_type}
-                    </Badge>
-                  </div>
-
-                  <div className="col-span-1 mr-4">
+                  {/* Action Button */}
+                  <div className="flex justify-end">
                     <Link href={`/meetings/${meeting.id}`}>
                       <Button
                         variant="whiteLine"
                         size="sm"
-                        className="w-full text-xs px-5 py-1"
+                        className="flex items-center gap-1 text-xs sm:text-sm"
                       >
-                        Detail
+                        <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">Detail</span>
                       </Button>
                     </Link>
                   </div>
                 </div>
-
-                {/* Mobile Layout */}
-                <div className="lg:hidden p-3 sm:p-4 hover:bg-muted/50">
-                  <div className="space-y-3">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-sm sm:text-base truncate">
-                          {meeting.title}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-1">
-                          {meeting.description}
-                        </p>
-                      </div>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <button className="flex items-center gap-1 hover:opacity-80 transition-opacity">
-                            <Badge
-                               className={`${getStatusColor(
-                                 meeting.status
-                               )} text-xs flex-shrink-0 cursor-pointer`}
-                             >
-                               {getStatusLabel(meeting.status)}
-                             </Badge>
-                            <ChevronDown className="w-3 h-3 text-muted-foreground" />
-                          </button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-40 p-1">
-                          <div className="space-y-1">
-                            {statusOptions.map((status) => (
-                              <button
-                                key={status}
-                                onClick={() => handleStatusUpdate(meeting.id, status)}
-                                className={`w-full text-left px-2 py-1.5 text-sm rounded-md hover:bg-muted transition-colors ${
-                                  meeting.status === status ? 'bg-muted font-medium' : ''
-                                }`}
-                              >
-                                <Badge
-                                    className={`${getStatusColor(status)} text-xs`}
-                                  >
-                                    {getStatusLabel(status)}
-                                  </Badge>
-                              </button>
-                            ))}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                        <span>{formatRelativeTime(meeting.date_time)}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                        <span>{formatDuration(meeting.duration)}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {getTypeIcon(meeting.meeting_type)}
-                        <span className="truncate">{meeting.location}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Badge variant="outline" className="capitalize text-xs">
-                          {meeting.meeting_type}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end">
-                      <Link href={`/meetings/${meeting.id}`}>
-                        <Button
-                          variant="whiteLine"
-                          size="sm"
-                          className="text-xs sm:text-sm"
-                        >
-                          Detail
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
               </div>
-            ))
-          )}
-        </div>
+            ))}
 
-        {!loading && sortedMeetings.length === 0 && (
-          <div className="text-center py-8 sm:py-12">
-            <Calendar className="w-8 h-8 sm:w-12 sm:h-12 mx-auto text-muted-foreground mb-3 sm:mb-4" />
-            <h3 className="text-base sm:text-lg font-medium text-foreground mb-2">
-              Tidak ada meeting
-            </h3>
-            <p className="text-sm sm:text-base text-muted-foreground">
-              Tidak ada meeting yang sesuai dengan filter Anda.
-            </p>
+            {sortedMeetings.length === 0 && (
+              <div className="text-center py-12">
+                <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                  Tidak ada meeting
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {searchQuery || Object.values(filters).some(Boolean)
+                    ? "Tidak ada meeting yang sesuai dengan filter Anda."
+                    : "Belum ada meeting yang dibuat."}
+                </p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
