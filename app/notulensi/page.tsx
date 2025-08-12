@@ -17,6 +17,7 @@ import {
   Download,
   MessageCircle,
   Mail,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../components/ui/Button";
@@ -194,6 +195,19 @@ export default function NotulensiPage() {
   const handleViewDetail = (notulensi: Notulensi) => {
     setSelectedNotulensi(notulensi);
     setIsDetailOpen(true);
+  };
+
+  // Handle status change
+  const handleUpdateApprovalStatus = async (id: string, shouldApprove: boolean) => {
+    try {
+      if (shouldApprove) {
+        await approveNotulensi(id);
+      } else {
+        await unapproveNotulensi(id);
+      }
+    } catch (error) {
+      console.error('Error updating approval status:', error);
+    }
   };
 
   const resetFilters = () => {
@@ -622,11 +636,53 @@ export default function NotulensiPage() {
                         </div>
                       </td>
                       <td className="py-5 px-4">
-                        <Badge
-                          className={`${approvalStatus.color} text-xs whitespace-nowrap`}
-                        >
-                          {approvalStatus.label}
-                        </Badge>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Badge
+                              className={`${approvalStatus.color} text-xs whitespace-nowrap cursor-pointer hover:opacity-80 flex items-center gap-1 max-w-fit px-2`}
+                            >
+                              {approvalStatus.label}
+                              <ChevronDown className="h-3 w-3" />
+                            </Badge>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-48 p-0" align="start">
+                            <div className="p-2">
+                              <div className="text-xs font-medium text-muted-foreground mb-2 px-2">
+                                Ubah Status Persetujuan
+                              </div>
+                              <div className="flex flex-col space-y-1">
+                                <Button
+                                  variant="ghost"
+                                  className={`justify-start text-sm h-8 px-2 ${
+                                    notulensi.approved_at ? "bg-muted" : ""
+                                  }`}
+                                  onClick={() => {
+                                    handleUpdateApprovalStatus(notulensi.id, true);
+                                  }}
+                                >
+                                  <div className="flex items-center space-x-2">
+                                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                                    <span>Approved</span>
+                                  </div>
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  className={`justify-start text-sm h-8 px-2 ${
+                                    !notulensi.approved_at ? "bg-muted" : ""
+                                  }`}
+                                  onClick={() => {
+                                    handleUpdateApprovalStatus(notulensi.id, false);
+                                  }}
+                                >
+                                  <div className="flex items-center space-x-2">
+                                    <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                                    <span>Pending Approval</span>
+                                  </div>
+                                </Button>
+                              </div>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       </td>
                       <td className="py-5 px-4">
                         <div className="flex items-center gap-2 min-w-0">
@@ -729,11 +785,53 @@ export default function NotulensiPage() {
                           {notulensi.content.substring(0, 100)}...
                         </p>
                       </div>
-                      <Badge
-                        className={`${approvalStatus.color} text-xs whitespace-nowrap`}
-                      >
-                        {approvalStatus.label}
-                      </Badge>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Badge
+                            className={`${approvalStatus.color} text-xs whitespace-nowrap cursor-pointer hover:opacity-80 flex items-center gap-1 max-w-fit px-2`}
+                          >
+                            {approvalStatus.label}
+                            <ChevronDown className="h-3 w-3" />
+                          </Badge>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-48 p-0" align="start">
+                          <div className="p-2">
+                            <div className="text-xs font-medium text-muted-foreground mb-2 px-2">
+                              Ubah Status Persetujuan
+                            </div>
+                            <div className="flex flex-col space-y-1">
+                              <Button
+                                variant="ghost"
+                                className={`justify-start text-sm h-8 px-2 ${
+                                  notulensi.approved_at ? "bg-muted" : ""
+                                }`}
+                                onClick={() => {
+                                  handleUpdateApprovalStatus(notulensi.id, true);
+                                }}
+                              >
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-2 h-2 rounded-full bg-green-500" />
+                                  <span>Approved</span>
+                                </div>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                className={`justify-start text-sm h-8 px-2 ${
+                                   !notulensi.approved_at ? "bg-muted" : ""
+                                 }`}
+                                onClick={() => {
+                                  handleUpdateApprovalStatus(notulensi.id, false);
+                                }}
+                              >
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                                  <span>Pending Approval</span>
+                                </div>
+                              </Button>
+                            </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
 
                     {/* Details Grid */}

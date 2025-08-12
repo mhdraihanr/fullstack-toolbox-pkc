@@ -209,9 +209,9 @@ export function Sidebar({ className }: SidebarProps) {
           className="h-6 w-6 sm:h-7 sm:w-7 p-0 rounded-full bg-background border shadow-md hover:bg-accent hover:shadow-lg transition-all flex-shrink-0"
         >
           {isCollapsed ? (
-            <Menu className="h-4 w-3 sm:h-4 sm:w-4 dark:text-white text-black" />
+            <Menu className="h-4 w-3 sm:h-4 sm:w-4 dark:text-white text-black cursor-pointer" />
           ) : (
-            <PanelRight className="h-4 w-3 sm:h-4 sm:w-4 dark:text-white text-black" />
+            <PanelRight className="h-4 w-3 sm:h-4 sm:w-4 dark:text-white text-black cursor-pointer" />
           )}
         </Button>
       </div>
@@ -227,7 +227,7 @@ export function Sidebar({ className }: SidebarProps) {
               <Link href="/tasks/create">
                 <Button
                   variant="default"
-                  className="w-full justify-start bg-primary hover:bg-primary/90 h-7 sm:h-8 lg:h-9 text-xs sm:text-sm px-2 sm:px-3"
+                  className="w-full justify-start bg-primary hover:bg-primary/90 h-7 sm:h-8 lg:h-9 text-xs sm:text-sm px-2 sm:px-3 cursor-pointer"
                 >
                   <Plus className="mr-1.5 sm:mr-2 lg:mr-3 h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 flex-shrink-0" />
                   <span className="truncate text-xs sm:text-sm">
@@ -239,7 +239,7 @@ export function Sidebar({ className }: SidebarProps) {
               <Link href="/meetings/create">
                 <Button
                   variant="outline"
-                  className="w-full justify-start border-primary/50 text-primary hover:bg-primary/10 hover:text-primary h-7 sm:h-8 lg:h-9 text-xs sm:text-sm px-2 sm:px-3"
+                  className="w-full justify-start border-primary/50 text-primary hover:bg-primary/10 hover:text-primary h-7 sm:h-8 lg:h-9 text-xs sm:text-sm px-2 sm:px-3 cursor-pointer"
                 >
                   <Plus className="mr-1.5 sm:mr-2 lg:mr-3 h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 flex-shrink-0" />
                   <span className="truncate text-xs sm:text-sm">
@@ -333,7 +333,7 @@ export function Sidebar({ className }: SidebarProps) {
                   <Settings className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
                 </Link>
                 <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block">
-                  <div className="bg-popover text-popover-foreground px-2 py-1 rounded-md text-xs whitespace-nowrap shadow-md border">
+                  <div className="bg-popover text-popover-foreground dark:text-white px-2 py-1 rounded-md text-xs whitespace-nowrap shadow-md border">
                     Settings
                   </div>
                 </div>
@@ -343,8 +343,10 @@ export function Sidebar({ className }: SidebarProps) {
                 href="/settings"
                 className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 rounded-lg px-2 sm:px-3 py-1 sm:py-1.5 lg:py-2 text-xs sm:text-sm text-white hover:bg-gray-800 hover:text-white"
               >
-                <Settings className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 flex-shrink-0" />
-                <span className="truncate text-xs sm:text-sm">Settings</span>
+                <Settings className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 flex-shrink-0 text-black dark:text-white" />
+                <span className="truncate text-xs sm:text-sm text-black dark:text-white">
+                  Settings
+                </span>
               </Link>
             )}
           </div>

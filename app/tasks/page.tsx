@@ -23,6 +23,7 @@ import {
   ArrowDown,
   ArrowUpDown,
   Loader2,
+  ChevronDown,
 } from "lucide-react";
 import { Task } from "@/types";
 
@@ -632,27 +633,50 @@ export default function TasksPage() {
                                 | "cancelled"
                                 | "draft"
                             }
-                            className="text-sm cursor-pointer hover:opacity-80"
+                            className="text-sm cursor-pointer hover:opacity-80 flex items-center gap-1 max-w-fit px-2"
                           >
                             {task.status}
+                            <ChevronDown className="h-3 w-3" />
                           </Badge>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <div className="flex flex-col">
-                            {statusOptions.map((status) => (
-                              <Button
-                                key={status}
-                                variant="ghost"
-                                className={`justify-start text-sm ${
-                                  task.status === status ? "bg-muted" : ""
-                                }`}
-                                onClick={() => {
-                                  handleUpdateTaskStatus(task.id, status);
-                                }}
-                              >
-                                {status}
-                              </Button>
-                            ))}
+                        <PopoverContent className="w-48 p-0" align="start">
+                          <div className="p-2">
+                            <div className="text-xs font-medium text-muted-foreground mb-2 px-2">
+                              Ubah Status
+                            </div>
+                            <div className="flex flex-col space-y-1">
+                              {statusOptions.map((status) => (
+                                <Button
+                                  key={status}
+                                  variant="ghost"
+                                  className={`justify-start text-sm h-8 px-2 ${
+                                    task.status === status ? "bg-muted" : ""
+                                  }`}
+                                  onClick={() => {
+                                    handleUpdateTaskStatus(task.id, status);
+                                  }}
+                                >
+                                  <div className="flex items-center space-x-2">
+                                    <div
+                                      className={`w-2 h-2 rounded-full ${
+                                        status === "completed"
+                                          ? "bg-green-500"
+                                          : status === "in-progress"
+                                          ? "bg-blue-500"
+                                          : status === "pending"
+                                          ? "bg-yellow-500"
+                                          : "bg-gray-500"
+                                      }`}
+                                    />
+                                    <span className="capitalize">
+                                      {status === "in-progress"
+                                        ? "In Progress"
+                                        : status}
+                                    </span>
+                                  </div>
+                                </Button>
+                              ))}
+                            </div>
                           </div>
                         </PopoverContent>
                       </Popover>
@@ -775,27 +799,50 @@ export default function TasksPage() {
                             | "cancelled"
                             | "draft"
                         }
-                        className="text-xs cursor-pointer hover:opacity-80"
+                        className="text-xs cursor-pointer hover:opacity-80 flex items-center gap-1 max-w-fit px-2"
                       >
                         {task.status}
+                        <ChevronDown className="h-3 w-3" />
                       </Badge>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <div className="flex flex-col">
-                        {statusOptions.map((status) => (
-                          <Button
-                            key={status}
-                            variant="ghost"
-                            className={`justify-start text-sm ${
-                              task.status === status ? "bg-muted" : ""
-                            }`}
-                            onClick={() => {
-                              handleUpdateTaskStatus(task.id, status);
-                            }}
-                          >
-                            {status}
-                          </Button>
-                        ))}
+                    <PopoverContent className="w-48 p-0" align="start">
+                      <div className="p-2">
+                        <div className="text-xs font-medium text-muted-foreground mb-2 px-2">
+                          Ubah Status
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          {statusOptions.map((status) => (
+                            <Button
+                              key={status}
+                              variant="ghost"
+                              className={`justify-start text-sm h-8 px-2 ${
+                                task.status === status ? "bg-muted" : ""
+                              }`}
+                              onClick={() => {
+                                handleUpdateTaskStatus(task.id, status);
+                              }}
+                            >
+                              <div className="flex items-center space-x-2">
+                                <div
+                                  className={`w-2 h-2 rounded-full ${
+                                    status === "completed"
+                                      ? "bg-green-500"
+                                      : status === "in-progress"
+                                      ? "bg-blue-500"
+                                      : status === "pending"
+                                      ? "bg-yellow-500"
+                                      : "bg-gray-500"
+                                  }`}
+                                />
+                                <span className="capitalize">
+                                  {status === "in-progress"
+                                    ? "In Progress"
+                                    : status}
+                                </span>
+                              </div>
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     </PopoverContent>
                   </Popover>

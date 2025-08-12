@@ -3,6 +3,7 @@
 import React from "react";
 import { Search, Bell, Settings, Menu } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -17,6 +18,11 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
   const { user } = useAuth();
+  const router = useRouter();
+
+  const handleLogoClick = () => {
+    router.push('/dashboard');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 dark:border-border/20 bg-background/95 dark:bg-[#1E1E2D]/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm dark:shadow-lg dark:shadow-black/10">
@@ -32,7 +38,10 @@ export function Header({ onMenuClick }: HeaderProps) {
         </Button>
 
         {/* Logo */}
-        <div className="mr-2 sm:mr-4 flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+        <div 
+          className="mr-2 sm:mr-4 flex items-center space-x-1 sm:space-x-2 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+          onClick={handleLogoClick}
+        >
           <Image
             src="/logo.png"
             alt="Web Toolbox Logo"

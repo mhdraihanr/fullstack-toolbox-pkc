@@ -13,10 +13,11 @@ import {
 import { StatsCard, TaskList, ChartCard } from "@/components/features";
 import { useTasks } from "@/lib/hooks/useTasks";
 import { useMeetings } from "@/lib/hooks/useMeetings";
+import { useMeetingAttendanceStats } from "@/lib/hooks/useMeetingAttendanceStats";
 import {
   meetingAttendanceData,
   generateTaskStatusData,
-  generateDepartmentTasksData,
+  generateMeetingAttendanceDataFromStats,
 } from "./data";
 
 // Mock data untuk charts diimpor dari './data'
@@ -42,6 +43,13 @@ export default function DashboardPage() {
     autoRefresh: true,
     clientSideSearch: true,
   });
+
+  // Get meeting attendance stats from Supabase
+  const {
+    attendanceStats,
+    loading: attendanceLoading,
+    error: attendanceError,
+  } = useMeetingAttendanceStats();
 
   // Calculate real-time stats from tasks
   const stats = useMemo(() => {
@@ -76,12 +84,27 @@ export default function DashboardPage() {
     };
   }, [tasks]);
 
-  // Generate chart data from real tasks
+  // Generate chart data from real tasks and meetings
   const taskStatusData = useMemo(() => generateTaskStatusData(tasks), [tasks]);
-  const departmentTasksData = useMemo(
-    () => generateDepartmentTasksData(tasks),
-    [tasks]
-  );
+  const meetingAttendanceChartData = useMemo(() => {
+    if (attendanceStats && attendanceStats.length > 0) {
+      return generateMeetingAttendanceDataFromStats(attendanceStats);
+    }
+    return [
+      { label: 'Jan', value: 85, color: 'bg-blue-500' },
+      { label: 'Feb', value: 78, color: 'bg-blue-500' },
+      { label: 'Mar', value: 92, color: 'bg-blue-500' },
+      { label: 'Apr', value: 88, color: 'bg-blue-500' },
+      { label: 'May', value: 95, color: 'bg-blue-500' },
+      { label: 'Jun', value: 82, color: 'bg-blue-500' },
+      { label: 'Jul', value: 90, color: 'bg-blue-500' },
+      { label: 'Aug', value: 87, color: 'bg-blue-500' },
+      { label: 'Sep', value: 93, color: 'bg-blue-500' },
+      { label: 'Oct', value: 89, color: 'bg-blue-500' },
+      { label: 'Nov', value: 91, color: 'bg-blue-500' },
+      { label: 'Dec', value: 86, color: 'bg-blue-500' }
+    ];
+  }, [attendanceStats]);
 
   // Get upcoming meetings (next 3 meetings)
   const upcomingMeetings = useMemo(() => {
@@ -96,7 +119,7 @@ export default function DashboardPage() {
   }, [meetings]);
 
   // Show loading state
-  if (tasksLoading) {
+  if (tasksLoading || attendanceLoading) {
     return (
       <div className="space-y-4 sm:space-y-6 lg:space-y-8 dark:text-white min-h-screen p-4 sm:p-6 lg:p-8">
         <div className="flex items-center justify-center min-h-[400px]">
@@ -110,13 +133,13 @@ export default function DashboardPage() {
   }
 
   // Show error state
-  if (tasksError) {
+  if (tasksError || attendanceError) {
     return (
       <div className="space-y-4 sm:space-y-6 lg:space-y-8 dark:text-white min-h-screen p-4 sm:p-6 lg:p-8">
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <p className="text-red-600 mb-4">
-              Error loading dashboard: {tasksError}
+              Error loading dashboard: {tasksError || attendanceError}
             </p>
           </div>
         </div>
@@ -208,7 +231,7 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground px-3 py-1.5 rounded-lg bg-white border dark:bg-gray-900 ">
+                <span className="text-sm text-black dark:text-muted-foreground px-3 py-1.5 rounded-lg bg-white border dark:bg-gray-900 ">
                   {tasks.length} tasks
                 </span>
               </div>
@@ -234,8 +257,8 @@ export default function DashboardPage() {
             />
             <ChartCard
               title="Meeting Attendance Trend"
-              description="Tingkat kehadiran 6 bulan terakhir"
-              data={meetingAttendanceData}
+              description="Tingkat kehadiran sepanjang tahun"
+              data={meetingAttendanceChartData}
               type="line"
               trend={{
                 value: 8,
@@ -246,14 +269,7 @@ export default function DashboardPage() {
             />
           </div>
 
-          {/* Department Tasks */}
-          <ChartCard
-            title="Tasks by Department"
-            description="Distribusi tasks berdasarkan departemen"
-            data={departmentTasksData}
-            type="pie"
-            className="bg-card border rounded-xl"
-          />
+
         </div>
 
         {/* Right Column - Meetings and Quick Actions */}
@@ -269,8 +285,8 @@ export default function DashboardPage() {
                   Your scheduled meetings
                 </p>
               </div>
-              <span className="text-sm text-muted-foreground px-3 py-1.5 rounded-lg bg-white border dark:bg-gray-900">
-                {meetings.length} meetings
+              <span className="text-sm text-black dark:text-muted-foreground px-3 py-1.5 rounded-lg bg-white border dark:bg-gray-900">
+                {upcomingMeetings.length} meetings
               </span>
             </div>
             {meetingsLoading ? (
