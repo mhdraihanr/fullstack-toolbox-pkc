@@ -36,7 +36,7 @@ import {
 import { ConfirmDialog, useToast } from "../../../components/ui";
 import { getMeetingById, getUsers, deleteMeeting } from "../data";
 import { Meeting, User } from "../../../types";
-import { formatRelativeTime } from "../../../lib/utils";
+import { formatRelativeTime, formatMeetingTime, isMeetingPastOrCompleted } from "../../../lib/utils";
 
 export default function MeetingDetailPage() {
   const router = useRouter();
@@ -267,8 +267,12 @@ export default function MeetingDetailPage() {
                     <p className="font-medium">
                       {formatRelativeTime(meeting.date_time)}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(meeting.date_time).toLocaleString("id-ID")}
+                    <p className={`text-sm ${
+                      isMeetingPastOrCompleted(meeting.date_time, meeting.status)
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-muted-foreground'
+                    }`}>
+                      {formatMeetingTime(meeting.date_time, meeting.status)}
                     </p>
                   </div>
                 </div>

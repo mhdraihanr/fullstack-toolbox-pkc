@@ -318,10 +318,15 @@ export default function DashboardPage() {
                         <h3 className="font-medium text-foreground truncate">
                           {meeting.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className={`text-sm mt-1 ${
+                          new Date(meeting.date_time) < new Date() || meeting.status === 'completed'
+                            ? 'text-red-600 dark:text-red-400'
+                            : 'text-muted-foreground'
+                        }`}>
                           {new Date(meeting.date_time).toLocaleDateString(
                             "id-ID",
                             {
+                              year: "numeric",
                               month: "short",
                               day: "numeric",
                               hour: "2-digit",

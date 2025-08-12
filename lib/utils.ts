@@ -52,6 +52,22 @@ export function formatRelativeTime(date: string | Date): string {
   }
 }
 
+export function formatMeetingTime(date: string | Date, status?: string): string {
+  return new Date(date).toLocaleDateString("id-ID", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export function isMeetingPastOrCompleted(date: string | Date, status?: string): boolean {
+  const now = new Date();
+  const meetingDate = new Date(date);
+  return meetingDate < now || status === 'completed' || status === 'done';
+}
+
 // Color utilities
 export function getStatusColor(status: string): string {
   switch (status.toLowerCase()) {

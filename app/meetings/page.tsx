@@ -28,7 +28,7 @@ import {
 } from "../../components/ui/Card";
 import { getMeetingsWithUsers } from "./data";
 import { Meeting, MeetingFilters, User } from "../../types";
-import { formatRelativeTime } from "../../lib/utils";
+import { formatRelativeTime, formatMeetingTime, isMeetingPastOrCompleted } from "../../lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -446,8 +446,12 @@ export default function MeetingsPage() {
                         <div className="text-sm text-gray-600 dark:text-gray-400">
                           <div className="flex items-center gap-1 mb-1">
                             <Calendar className="w-3 h-3 text-muted-foreground" />
-                            <span className="truncate">
-                              {formatRelativeTime(meeting.date_time)}
+                            <span className={`truncate ${
+                              isMeetingPastOrCompleted(meeting.date_time, meeting.status) 
+                                ? 'text-red-600 dark:text-red-400' 
+                                : ''
+                            }`}>
+                              {formatMeetingTime(meeting.date_time, meeting.status)}
                             </span>
                           </div>
                           <div className="flex items-center gap-1">
@@ -567,8 +571,12 @@ export default function MeetingsPage() {
                       </span>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
-                        <span className="text-gray-900 dark:text-white">
-                          {formatRelativeTime(meeting.date_time)}
+                        <span className={`${
+                          isMeetingPastOrCompleted(meeting.date_time, meeting.status)
+                            ? 'text-red-600 dark:text-red-400'
+                            : 'text-gray-900 dark:text-white'
+                        }`}>
+                          {formatMeetingTime(meeting.date_time, meeting.status)}
                         </span>
                       </div>
                     </div>
