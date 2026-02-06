@@ -11,7 +11,6 @@
 - **📊 Real-time Dashboard** - Live tracking and analytics visualization
 - **🔐 Multi-Role Support** - Admin, Manager, and Employee permissions
 - **🌙 Dark/Light Theme** - Modern UI with theme switching
-  
 
 ## 🛠️ Tech Stack
 
@@ -61,6 +60,9 @@ pnpm install
 # Setup environment variables
 # Copy .env.local and update with your Supabase credentials
 # Follow: ./migrations/SUPABASE_SETUP.md
+
+# Jika restore database dari backup:
+# Ikuti panduan di: ./RESTORE_GUIDE.md
 
 # Run development server
 pnpm dev

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, Bell, Settings, Menu } from "lucide-react";
+import { Bell, Settings, Menu } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/ui/Avatar";
@@ -21,7 +21,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   const router = useRouter();
 
   const handleLogoClick = () => {
-    router.push('/dashboard');
+    router.push("/dashboard");
   };
 
   return (
@@ -38,7 +38,7 @@ export function Header({ onMenuClick }: HeaderProps) {
         </Button>
 
         {/* Logo */}
-        <div 
+        <div
           className="mr-2 sm:mr-4 flex items-center space-x-1 sm:space-x-2 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
           onClick={handleLogoClick}
         >
@@ -61,17 +61,6 @@ export function Header({ onMenuClick }: HeaderProps) {
             <div className="text-[7px] sm:text-[9px] lg:text-xs text-muted-foreground font-medium -mt-0.5">
               Productivity & Collaboration
             </div>
-          </div>
-        </div>
-
-        {/* Search - Flexible center area */}
-        <div className="flex-1 flex items-center justify-center min-w-0 mx-1 sm:mx-2 lg:mx-4">
-          <div className="relative w-full max-w-[200px] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg">
-            <Search className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-muted-foreground" />
-            <input
-              placeholder="Cari..."
-              className="w-full rounded-md border border-input bg-background pl-6 sm:pl-8 lg:pl-10 pr-2 sm:pr-3 py-1.5 sm:py-2 lg:py-2.5 text-xs sm:text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            />
           </div>
         </div>
 
